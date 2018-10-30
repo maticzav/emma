@@ -1,8 +1,10 @@
 {
   "name": "server",
-  "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT",
+  "main": "dist/index.js",
+  "scripts": {},
+  "dependencies": {
+    "probot": "^7.3.1"
+  },
   "devDependencies": {
     "@types/node": "^10.12.1",
     "nodemon": "^1.18.5",
@@ -11,5 +13,6 @@
     "tslint-config-prettier": "^1.15.0",
     "tslint-config-standard": "^8.0.1",
     "typescript": "^3.1.4"
-  }
+  },
+  "license": "MIT"
 }
