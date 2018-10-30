@@ -2,12 +2,9 @@
   "compilerOptions": {
     "target": "es6",
     "module": "commonjs",
-    "moduleResolution": "node",
-    "noUnusedLocals": true,
     "rootDir": "src",
     "outDir": "dist",
-    "sourceMap": true,
-    "lib": ["dom", "es2017", "esnext.asynciterable"]
+    "resolveJsonModule": true
   },
   "exclude": ["node_modules", "dist"]
 }

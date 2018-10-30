@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`emma config 1`] = `
+"{
+  \\"boilerplates\\": [\\"minimal\\", \\"basic\\", \\"advanced\\"]
+}
+"
+`;
