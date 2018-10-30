@@ -3,9 +3,11 @@
   "main": "dist/index.js",
   "scripts": {},
   "dependencies": {
+    "mongoose": "^5.3.7",
     "probot": "^7.3.1"
   },
   "devDependencies": {
+    "@types/mongoose": "^5.2.20",
     "@types/node": "^10.12.1",
     "nodemon": "^1.18.5",
     "ts-node": "^7.0.1",
