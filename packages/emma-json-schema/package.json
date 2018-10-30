@@ -1,0 +1,25 @@
+{
+  "name": "emma-json-schema",
+  "version": "0.0.0",
+  "main": "dist/definition.js",
+  "typings": "dist/definition.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "clean": "rimraf dist",
+    "prepare": "npm-rin-all --serial clean build copy-schema",
+    "build": "tsc -d",
+    "copy-schema": "cp src/schema.json dist",
+    "test": "npm run build"
+  },
+  "devDependencies": {
+    "ajv": "^6.5.4",
+    "ava": "1.0.0-rc.1",
+    "npm-run-all": "^4.1.3",
+    "rimraf": "^2.6.2",
+    "ts-node": "^7.0.1",
+    "typescript": "^3.1.4"
+  },
+  "license": "MIT"
+}
