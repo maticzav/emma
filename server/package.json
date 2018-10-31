@@ -2,7 +2,9 @@
   "name": "server",
   "main": "dist/index.js",
   "version": "0.0.0",
-  "scripts": {},
+  "scripts": {
+    "test": "jest"
+  },
   "dependencies": {
     "mongoose": "^5.3.7",
     "probot": "^7.3.1"
