@@ -22,6 +22,7 @@ const boilerplateSchema = new Schema({
   id: { type: Types.ObjectId, unique: true, auto: true },
   name: { type: String, unique: true },
   description: { type: String, unique: true },
+  author: {},
   repository: {
     uri: { type: String, unique: false },
     branch: { type: String, unique: true },
