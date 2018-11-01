@@ -4,7 +4,7 @@ import { Application } from 'probot'
 
 export = (app: Application) => {
   app.on('push', async context => {})
-  app.on('installation_repositories', async context => {})
+  app.on('installation_repositories.added', async context => {})
 }
 
 // Helper functions
