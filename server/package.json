@@ -6,6 +6,9 @@
     "test": "jest"
   },
   "dependencies": {
+    "apollo-server": "^2.1.0",
+    "emma-json-schema": "file:../packages/emma-json-schema",
+    "graphql": "^14.0.2",
     "mongoose": "^5.3.7",
     "probot": "^7.3.1"
   },

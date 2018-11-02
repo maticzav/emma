@@ -1,10 +1,35 @@
-import { Application } from 'probot'
+import { ApolloServer, gql } from 'apollo-server'
 
-// Webhooks
+const books = [
+  {
+    title: 'Harry Potter and the Chamber of Secrets',
+    author: 'J.K. Rowling',
+  },
+  {
+    title: 'Jurassic Park',
+    author: 'Michael Crichton',
+  },
+]
 
-export = (app: Application) => {
-  app.on('push', async context => {})
-  app.on('installation_repositories.added', async context => {})
+const typeDefs = gql`
+  type Book {
+    title: String
+    author: String
+  }
+
+  type Query {
+    books: [Book]
+  }
+`
+
+const resolvers = {
+  Query: {
+    books: () => books,
+  },
 }
 
-// Helper functions
+const server = new ApolloServer({ typeDefs, resolvers })
+
+server.listen().then(({ url }) => {
+  console.log(`🚀  Server ready at ${url}`)
+})

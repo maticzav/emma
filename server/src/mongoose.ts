@@ -1,4 +1,4 @@
-import { Schema, Types, model, connect, connection } from 'mongoose'
+import { connect, connection } from 'mongoose'
 
 // Config
 
@@ -15,22 +15,3 @@ connection.once('open', () => {
 connection.on('error', err => {
   console.error(`Error with MongoDB:`, err)
 })
-
-// Schema
-
-const boilerplateSchema = new Schema({
-  id: { type: Types.ObjectId, unique: true, auto: true },
-  name: { type: String, unique: true },
-  description: { type: String, unique: true },
-  author: {},
-  repository: {
-    uri: { type: String, unique: false },
-    branch: { type: String, unique: true },
-    path: { type: String, unique: false },
-  },
-  // analytics: {
-  //   downloads: { type: Number },
-  // },
-})
-
-export const Boilerplate = model('Boilerplate', boilerplateSchema)
