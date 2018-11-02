@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "clean": "rimraf dist",
-    "prepare": "npm-rin-all --serial clean build copy-schema",
+    "prepare": "npm-run-all --serial clean build copy-schema",
     "build": "tsc -d",
     "copy-schema": "cp src/schema.json dist",
     "pretest": "npm run build",
