@@ -17,7 +17,7 @@ function changedEmmaConfiguration(context: Context): boolean {
 }
 
 async function getEmmaConfiguration(context: Context): Promise<EmmaConfig> {
-  const file = await context.github.issues.create
+  const file = await context.github
 
   return
 }
