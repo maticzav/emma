@@ -55,17 +55,11 @@ async function handleRepositoryPushEvent(context: Context) {
 }
 
 async function handleRepositoryInstallEvent(context: Context) {
-  const {
-    repositories_added: addedRepositories,
-    repositories_removed: removedRepositories,
-  } = context.payload
+  const repositories = context.payload.repositories_added
 }
 
 async function handleRepositoryUninstallEvent(context: Context) {
-  const {
-    repositories_added: addedRepositories,
-    repositories_removed: removedRepositories,
-  } = context.payload
+  const repositories = context.payload.repositories_removed
 }
 
 async function handleUninstallEvent(context: Context) {}

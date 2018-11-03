@@ -1,12 +1,20 @@
 {
   "compilerOptions": {
+    "allowJs": false,
+    "lib": ["es2015", "es2017"],
     "target": "es5",
-    "moduleResolution": "node",
     "module": "commonjs",
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "noImplicitReturns": true,
+    "noImplicitAny": true,
+    "esModuleInterop": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "strict": true,
     "sourceMap": true,
     "rootDir": "src",
-    "outDir": "dist",
-    "lib": ["esnext", "dom"]
+    "outDir": "dist"
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
