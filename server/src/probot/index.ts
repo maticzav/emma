@@ -79,9 +79,12 @@ async function handleInstallEvent(context: Context) {
 }
 
 async function handleRepositoryPushEvent(context: Context) {
-  if (changedEmmaConfiguration(context)) {
-    const configuration = getEmmaConfiguration(context)
-  }
+  const configuration = await getRepositoryConfiguration(
+    context,
+    context.repo(),
+  )
+
+  if (changedConfiguration(context.repo(), configuration))
 }
 
 async function handleRepositoryInstallEvent(context: Context) {

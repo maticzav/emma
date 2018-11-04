@@ -29,9 +29,9 @@ export async function getRepositoryConfiguration(
     possibleConfigurationFiles
       .filter(file => file.download_url !== null)
       .map(async possibleConfigurationFile => {
-        const file = (await downloadFile(
+        const file = await downloadFile<EmmaConfig>(
           possibleConfigurationFile.download_url!,
-        )) as EmmaConfig
+        )
 
         return file
       }),
