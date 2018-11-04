@@ -15,3 +15,7 @@ export function parseConfig(config: EmmaConfig): EmmaConfig | null {
     return null
   }
 }
+
+export function parsePath(path: string): string | null {
+  return ''
+}

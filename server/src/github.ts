@@ -3,6 +3,7 @@ import { EmmaConfig } from 'emma-json-schema'
 import { emmaConfigNames } from './config'
 import { getFirst, downloadFile } from './utils'
 import { parseConfig } from './parse'
+import { GitHubAPI } from 'probot/lib/github'
 
 export interface GithubRepository {
   id: string
@@ -18,11 +19,11 @@ export interface GithubRepository {
  * @param repository
  */
 export async function getRepositoryConfiguration(
-  context: Context,
+  github: GitHubAPI,
   repository: GithubRepository,
 ): Promise<EmmaConfig | null> {
   const possibleConfigurationFiles = await Promise.all(
-    emmaConfigNames.map(file => getContent(context, repository, file)),
+    emmaConfigNames.map(file => getContent(github, repository, file)),
   )
 
   const possibleConfigurations = await Promise.all(
@@ -77,11 +78,11 @@ interface GithubContent {
  * @param file
  */
 async function getContent(
-  context: Context,
+  github: GitHubAPI,
   repo: GithubRepository,
   file: string,
 ): Promise<GithubContent> {
-  const res = await context.github.repos.getContent({
+  const res = await github.repos.getContent({
     owner: repo.owner,
     repo: repo.name,
     ref: repo.ref,
@@ -89,22 +90,4 @@ async function getContent(
   })
 
   return res as any
-}
-
-/**
- *
- * @param context
- */
-function changedEmmaConfiguration(context: Context): boolean {
-  const { commits } = context.payload
-
-  commits.some()
-
-  return true
-
-  // Functions which help with the execution of this algorithm.
-
-  function hasEmmaConfigInChangedFiles(files: string[]) {
-    return files.some(file => emmaConfigNames.includes(file))
-  }
 }

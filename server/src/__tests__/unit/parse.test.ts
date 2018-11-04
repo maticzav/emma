@@ -1,7 +1,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import { EmmaConfig } from 'emma-json-schema'
-import { parseConfig } from '../../parse'
+import { parseConfig, parsePath } from '../../parse'
 
 describe('Parse functions work accordingly', () => {
   test('parseConfig parses the configuration', async () => {
@@ -30,5 +30,27 @@ describe('Parse functions work accordingly', () => {
     const parsed = parseConfig(config)
 
     expect(parsed).toEqual(null)
+  })
+
+  test('parsePath parses paths correctly', async t => {
+    const paths = [
+      'test/*',
+      'foo/slask/*',
+      './bar/something/*',
+      './abc',
+      '.',
+      'test',
+    ]
+
+    const parsedPaths = paths.map(path => parsePath(path))
+
+    expect(parsedPaths).toEqual([
+      'test',
+      'foo/slack',
+      'bar/something',
+      'abc',
+      '',
+      'test',
+    ])
   })
 })
