@@ -8,8 +8,10 @@ import { GitHubAPI } from 'probot/lib/github'
 export interface GithubRepository {
   id: string
   node_id: string
+  owner: string
   name: string
   full_name: string
+  ref: string
   private: boolean
 }
 
@@ -90,4 +92,29 @@ async function getContent(
   })
 
   return res as any
+}
+
+export async function parsePath(
+  github: GitHubAPI,
+  repository: GithubRepository,
+  path: string,
+): string | null {
+  const [head, ...tail] = path.split('/')
+
+  return fillGaps(head, ...tail)
+
+  // Functions which help with execution of the algoirthm.
+
+  async function fillGaps(head: string, ...tail: string[]): Promise<string> {
+    switch (head) {
+      case '*': {
+        const contents = github.c
+        return
+      }
+
+      default: {
+        return head + (await fillGaps(head, tail))
+      }
+    }
+  }
 }
