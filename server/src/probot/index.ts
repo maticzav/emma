@@ -84,7 +84,8 @@ async function handleRepositoryPushEvent(context: Context) {
     context.repo(),
   )
 
-  if (changedConfiguration(context.repo(), configuration))
+  if (configurationChanged(context.repo(), configuration)) {
+  }
 }
 
 async function handleRepositoryInstallEvent(context: Context) {
