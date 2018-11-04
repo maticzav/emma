@@ -1,4 +1,6 @@
 import { Application, Context } from 'probot'
+import { getRepositoryConfiguration, GithubRepository } from '../github'
+import { EmmaConfig } from 'emma-json-schema'
 
 // Probot
 
@@ -43,13 +45,35 @@ export = (app: Application) => {
 // Events
 
 async function handleInstallEvent(context: Context) {
-  const { repositories } = context.payload
+  const repositories = context.payload.repositories as GithubRepository[]
 
-  const configurations = await Promise.all(
-    repositories.map(repository => getConfiguration(repository))
+  const repositoryConfigurations = await Promise.all(
+    repositories.map(repository =>
+      getRepositoryConfiguration(context, repository),
+    ),
   )
 
-  const { prs, configurations } = 
+  const { prs, configurations } = repositoryConfigurations.reduce<{
+    prs: GithubRepository[]
+    configurations: (GithubRepository & EmmaConfig)[]
+  }>(
+    (acc, repositoryConfiguration) => {
+      if (repositoryConfiguration === null) {
+        return acc
+        // return {
+        //   ...acc,
+        //   prs: [...acc.prs, repositoryConfiguration],
+        // }
+      } else {
+        return acc
+        // return {
+        //   ...acc,
+        //   configurations: [...acc.configurations, repositoryConfiguration],
+        // }
+      }
+    },
+    { prs: [], configurations: [] },
+  )
 
   // check every repository: if emma-config, use that, otherwise make PR
 }
@@ -69,3 +93,9 @@ async function handleRepositoryUninstallEvent(context: Context) {
 }
 
 async function handleUninstallEvent(context: Context) {}
+
+// Templates
+
+const PRTemplate = `
+
+`

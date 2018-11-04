@@ -1,21 +1,28 @@
 import { Context } from 'probot'
-import fetch from 'isomorphic-fetch'
 import { EmmaConfig } from 'emma-json-schema'
 import { emmaConfigNames } from './config'
-import { getFirst } from './utils'
+import { getFirst, downloadFile } from './utils'
 import { parseConfig } from './parse'
+
+export interface GithubRepository {
+  id: string
+  node_id: string
+  name: string
+  full_name: string
+  private: boolean
+}
 
 /**
  *
  * @param context
  * @param repository
  */
-export async function getConfiguration(
+export async function getRepositoryConfiguration(
   context: Context,
-  ref: string,
+  repository: GithubRepository,
 ): Promise<EmmaConfig | null> {
   const possibleConfigurationFiles = await Promise.all(
-    emmaConfigNames.map(file => getContentFromRepository(context, ref, file)),
+    emmaConfigNames.map(file => getContent(context, repository, file)),
   )
 
   const possibleConfigurations = await Promise.all(
@@ -36,10 +43,6 @@ export async function getConfiguration(
   )
 
   return configuration
-}
-
-async function downloadFile<T = any>(uri: string): Promise<T> {
-  return fetch(uri).then(res => res.json())
 }
 
 enum GithubContentType {
@@ -73,16 +76,15 @@ interface GithubContent {
  * @param ref
  * @param file
  */
-async function getContentFromRepository(
+async function getContent(
   context: Context,
-  ref: string,
+  repo: GithubRepository,
   file: string,
 ): Promise<GithubContent> {
-  const repo = context.repo()
   const res = await context.github.repos.getContent({
     owner: repo.owner,
-    repo: repo.repo,
-    ref: ref,
+    repo: repo.name,
+    ref: repo.ref,
     path: file,
   })
 
