@@ -45,6 +45,12 @@ export = (app: Application) => {
 async function handleInstallEvent(context: Context) {
   const { repositories } = context.payload
 
+  const configurations = await Promise.all(
+    repositories.map(repository => getConfiguration(repository))
+  )
+
+  const { prs, configurations } = 
+
   // check every repository: if emma-config, use that, otherwise make PR
 }
 
