@@ -6,5 +6,6 @@
     "publish": {
       "ignoreChanges": ["ignored-file", "*.md"]
     }
-  }
+  },
+  "useWorkspaces": true
 }
