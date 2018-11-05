@@ -1,4 +1,4 @@
-import { Schema, Types, model } from 'mongoose'
+import { Schema, model } from 'mongoose'
 
 const boilerplateSchema = new Schema({
   name: { type: String, unique: true, required: true },

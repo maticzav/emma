@@ -2,8 +2,14 @@ import { GitHubAPI } from 'probot/lib/github'
 import { EmmaConfig } from 'emma-json-schema'
 
 import { emmaConfigNames } from './config'
-import { downloadFile, dedupe } from './utils'
 import { parseConfig } from './parse'
+import { dedupe } from './utils'
+
+/**
+ *
+ * Repositories
+ *
+ */
 
 export interface GithubRepository {
   id: string
@@ -17,27 +23,35 @@ export interface GithubRepository {
 
 /**
  *
+ * Finds the files which contain Emma configuration in repository.
+ *
  * @param context
  * @param repository
  */
-export async function getRepositoryConfiguration(
+export async function getRepositoryConfigurations(
   github: GitHubAPI,
   repository: GithubRepository,
-): Promise<EmmaConfig> {
-  const repoRootContents = await getContents(github, repository, '')
+): Promise<GithubContent[] | null> {
+  const repoRootContents = await getContents(github, repository)
 
   const configFiles = repoRootContents.filter(content =>
     emmaConfigNames.includes(content.name),
   )
 
   if (configFiles.length === 0) {
-    throw new Error('No config file found.')
+    return null
+  } else {
+    return configFiles
   }
+}
 
-  const configurations: EmmaConfig[] = await Promise.all(
-    configFiles.map(async file => downloadFile(file.download_url!)),
-  )
-
+/**
+ *
+ * Merges multiple Emma configurations into one.
+ *
+ * @param configurations
+ */
+export function mergeConfigurations(configurations: EmmaConfig[]): EmmaConfig {
   const configuration = configurations.reduce<EmmaConfig>(
     (acc, config) => {
       const validatedConfig = parseConfig(config)
@@ -58,6 +72,12 @@ export async function getRepositoryConfiguration(
 
   return configuration
 }
+
+/**
+ *
+ * Github Content types
+ *
+ */
 
 export type GithubContentType = 'file' | 'dir' | 'symlink'
 
@@ -81,6 +101,8 @@ export interface GithubContent {
 }
 
 /**
+ *
+ * Obtains a file information from GitHub.
  *
  * @param context
  * @param ref
@@ -107,6 +129,8 @@ export async function getContent(
 
 /**
  *
+ * Obtains a folder information from GitHub.
+ *
  * @param context
  * @param ref
  * @param file
@@ -114,7 +138,7 @@ export async function getContent(
 export async function getContents(
   github: GitHubAPI,
   repo: GithubRepository,
-  path: string,
+  path: string = '',
 ): Promise<GithubContent[]> {
   const res = await github.repos.getContent({
     owner: repo.owner,
@@ -129,6 +153,12 @@ export async function getContents(
 
   return res as any
 }
+
+/**
+ *
+ * Globs
+ *
+ */
 
 /**
  *

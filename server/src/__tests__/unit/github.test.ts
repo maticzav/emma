@@ -1,5 +1,11 @@
 import { Application } from 'probot'
-import { parsePathsFromGitGlob, getContent, getContents } from '../../github'
+import {
+  parsePathsFromGitGlob,
+  getContent,
+  getContents,
+  getRepositoryConfigurations,
+  mergeConfigurations,
+} from '../../github'
 
 import * as fixtures from '../fixtures/unit/github'
 
@@ -13,7 +19,67 @@ describe('Github functions work accordingly', () => {
 
   // Tests
 
-  test('getRepositoryConfiguration finds the correct configuration', async () => {})
+  test('getRepositoryConfigurationFiles finds correct files', async () => {
+    const github = {
+      repos: {
+        getContent: jest
+          .fn()
+          .mockReturnValue(
+            Promise.resolve([
+              fixtures.contentEmmaJson,
+              fixtures.contentEmmarc,
+              fixtures.contentEmmarcJson,
+              fixtures.content,
+            ]),
+          ),
+      },
+    } as any
+
+    app.auth = () => Promise.resolve(github)
+    const git = await app.auth()
+
+    const res = await getRepositoryConfigurations(git, fixtures.repo)
+    expect(res).toEqual([
+      fixtures.contentEmmaJson,
+      fixtures.contentEmmarc,
+      fixtures.contentEmmarcJson,
+    ])
+  })
+
+  test('getRepositoryConfigurationFiles returns null when no files configuration files exist', async () => {
+    const github = {
+      repos: {
+        getContent: jest
+          .fn()
+          .mockReturnValue(Promise.resolve(fixtures.contents)),
+      },
+    } as any
+
+    app.auth = () => Promise.resolve(github)
+    const git = await app.auth()
+
+    const res = await getRepositoryConfigurations(git, fixtures.repo)
+    expect(res).toBeNull()
+  })
+
+  test('mergeConfigurations merges valid configurations correctly', async () => {
+    const config = mergeConfigurations(fixtures.configurations)
+
+    expect(config).toEqual({
+      boilerplates: ['glob', 'a/b/c', 'd/e/*'],
+    })
+  })
+
+  test('mergeConfigurations skips invalid configurations', async () => {
+    const config = mergeConfigurations([
+      ...fixtures.configurations,
+      fixtures.invalidConfiguration,
+    ])
+
+    expect(config).toEqual({
+      boilerplates: ['glob', 'a/b/c', 'd/e/*'],
+    })
+  })
 
   test('getContent gets file', async () => {
     const github = {
