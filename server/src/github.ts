@@ -1,4 +1,3 @@
-import { Context } from 'probot'
 import { EmmaConfig } from 'emma-json-schema'
 import { emmaConfigNames } from './config'
 import { getFirst, downloadFile } from './utils'
@@ -48,13 +47,9 @@ export async function getRepositoryConfiguration(
   return configuration
 }
 
-enum GithubContentType {
-  'file',
-  'dir',
-  'symlink',
-}
+export type GithubContentType = 'file' | 'dir' | 'symlink'
 
-interface GithubContent {
+export interface GithubContent {
   type: GithubContentType
   encoding: string
   size: number
@@ -82,39 +77,155 @@ interface GithubContent {
 async function getContent(
   github: GitHubAPI,
   repo: GithubRepository,
-  file: string,
+  path: string,
 ): Promise<GithubContent> {
   const res = await github.repos.getContent({
     owner: repo.owner,
     repo: repo.name,
     ref: repo.ref,
-    path: file,
+    path: path,
   })
+
+  if (res instanceof Array) {
+    throw new Error(`Provided path is not a file. ${path}`)
+  }
 
   return res as any
 }
 
-export async function parsePath(
+/**
+ *
+ * @param context
+ * @param ref
+ * @param file
+ */
+async function getContents(
+  github: GitHubAPI,
+  repo: GithubRepository,
+  path: string,
+): Promise<GithubContent[]> {
+  const res = await github.repos.getContent({
+    owner: repo.owner,
+    repo: repo.name,
+    ref: repo.ref,
+    path: path,
+  })
+
+  if (!(res instanceof Array)) {
+    throw new Error(`Provided path is not a folder. ${path}`)
+  }
+
+  return res as any
+}
+
+/**
+ *
+ * Parses possible relative Github URLs by filling globs (*).
+ *
+ * @param github
+ * @param repository
+ * @param path
+ */
+export async function parsePathsFromGitGlob(
   github: GitHubAPI,
   repository: GithubRepository,
   path: string,
-): string | null {
-  const [head, ...tail] = path.split('/')
+): Promise<string[]> {
+  const glob = path.split('/')
 
-  return fillGaps(head, ...tail)
+  return parseGlob(glob, '')
 
-  // Functions which help with execution of the algoirthm.
+  // Functions which help with the execution of algorithm.
 
-  async function fillGaps(head: string, ...tail: string[]): Promise<string> {
+  /**
+   *
+   * Recursively fills the gaps and constructs paths.
+   *
+   * @param glob
+   * @param path
+   */
+  async function parseGlob(glob: string[], path: string): Promise<string[]> {
+    const [head, ...tail] = glob
+
     switch (head) {
+      /**
+       * When it reaches filler.
+       */
       case '*': {
-        const contents = github.c
-        return
-      }
+        const subfolders = await getPossibleSubfoldersForPath(path)
 
+        const pathsTree = await Promise.all(
+          subfolders.map(async subfolder => {
+            const paths = await parseGlob(tail, appendChunk(path, subfolder))
+            return {
+              head: subfolder,
+              paths,
+            }
+          }),
+        )
+
+        const paths = pathsTree.reduce<string[]>(
+          (acc, tree) => [
+            ...acc,
+            ...tree.paths.map(path => prependChunk(path, tree.head)),
+          ],
+          [],
+        )
+
+        return paths
+      }
+      /**
+       * Once it reaches the end of glob.
+       */
+      case undefined: {
+        return ['']
+      }
+      /**
+       * Regular path.
+       */
       default: {
-        return head + (await fillGaps(head, tail))
+        const paths = await parseGlob(tail, appendChunk(path, head))
+
+        return paths.map(path => prependChunk(path, head))
       }
     }
+  }
+
+  /**
+   *
+   * Appends a chunk at the end of a path.
+   *
+   * @param path
+   * @param chunk
+   */
+  function appendChunk(path: string, chunk: string): string {
+    if (path) return [path, chunk].join('/')
+    else return chunk
+  }
+
+  /**
+   *
+   * Prepends chunk at the beginning of the path.
+   *
+   * @param path
+   * @param chunk
+   */
+  function prependChunk(path: string, chunk: string): string {
+    if (path) return [chunk, path].join('/')
+    else return chunk
+  }
+
+  /**
+   *
+   * Finds possible continuations for particular path.
+   *
+   * @param path
+   */
+  async function getPossibleSubfoldersForPath(path: string): Promise<string[]> {
+    return getContents(github, repository, path).then(contents => {
+      return contents
+        .filter(content => content.type === 'dir')
+        .map(content => content.name)
+    })
   }
 }

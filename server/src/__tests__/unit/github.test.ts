@@ -1,45 +1,85 @@
 import { Application } from 'probot'
-import { GithubRepository, parsePath } from '../../github'
+import {
+  GithubRepository,
+  parsePathsFromGitGlob,
+  GithubContent,
+} from '../../github'
 
 describe('Github functions work accordingly', () => {
-  const emma = require('../../probot')
+  let app: Application
 
   // Config
-  let app = new Application()
-  app.load(emma)
-
-  const github = {
-    repos: {
-      getContent: jest.fn().mockReturnValue(
-        Promise.resolve({
-          type: 'type',
-          encoding: 'encoding',
-          size: 'size',
-          name: 'name',
-          path: 'path',
-          content: 'content',
-          sha: 'sha',
-          url: 'url',
-          git_url: 'git_url',
-          html_url: 'html_url',
-          download_url: 'download_url',
-          _links: {
-            git: 'git',
-            self: 'self',
-            html: 'html',
-          },
-        }),
-      ),
-    },
-    issues: {
-      createComment: jest.fn().mockReturnValue(Promise.resolve({})),
-    },
-  }
-
-  app.auth = () => Promise.resolve(github)
+  beforeEach(() => {
+    app = new Application()
+  })
 
   // Tests
-  test('parsePath parses paths correctly', async () => {
+  test('parsePathsForGitGlob parses paths correctly', async () => {
+    const contents: GithubContent[] = [
+      {
+        type: 'file',
+        encoding: 'encoding',
+        size: 2,
+        name: 'ignored',
+        path: 'path',
+        content: 'content',
+        sha: 'sha',
+        url: 'url',
+        git_url: 'git_url',
+        html_url: 'html_url',
+        download_url: 'download_url',
+        _links: {
+          git: 'git',
+          self: 'self',
+          html: 'html',
+        },
+      },
+      {
+        type: 'dir',
+        encoding: 'encoding',
+        size: 2,
+        name: 'folder-1',
+        path: 'path',
+        content: 'content',
+        sha: 'sha',
+        url: 'url',
+        git_url: 'git_url',
+        html_url: 'html_url',
+        download_url: 'download_url',
+        _links: {
+          git: 'git',
+          self: 'self',
+          html: 'html',
+        },
+      },
+      {
+        type: 'dir',
+        encoding: 'encoding',
+        size: 2,
+        name: 'folder-2',
+        path: 'path',
+        content: 'content',
+        sha: 'sha',
+        url: 'url',
+        git_url: 'git_url',
+        html_url: 'html_url',
+        download_url: 'download_url',
+        _links: {
+          git: 'git',
+          self: 'self',
+          html: 'html',
+        },
+      },
+    ]
+
+    const github = {
+      repos: {
+        getContent: jest.fn().mockReturnValue(Promise.resolve(contents)),
+      },
+    } as any
+
+    app.auth = () => Promise.resolve(github)
+
     const repo: GithubRepository = {
       id: 'id',
       node_id: 'node_id',
@@ -65,9 +105,44 @@ describe('Github functions work accordingly', () => {
     const git = await app.auth()
 
     const parsedPaths = await Promise.all(
-      paths.map(path => parsePath(git, repo, path)),
+      paths.map(async path => {
+        const parsedPaths = await parsePathsFromGitGlob(git, repo, path)
+
+        return { path, parsedPaths }
+      }),
+    ).then(res =>
+      res.reduce(
+        (acc, parsedPath) => ({
+          ...acc,
+          [parsedPath.path]: parsedPath.parsedPaths,
+        }),
+        {},
+      ),
     )
 
-    expect(parsedPaths).toEqual([])
+    expect(parsedPaths).toEqual({
+      './': ['.'],
+      '.': ['.'],
+      './folder': ['./folder'],
+      './nested/folder': ['./nested/folder'],
+      './folders/*': ['./folders/folder-1', './folders/folder-2'],
+      './nested/folders/*': [
+        './nested/folders/folder-1',
+        './nested/folders/folder-2',
+      ],
+      './*/test': ['./folder-1/test', './folder-2/test'],
+      './*/test/*': [
+        './folder-1/test/folder-1',
+        './folder-1/test/folder-2',
+        './folder-2/test/folder-1',
+        './folder-2/test/folder-2',
+      ],
+      './*/*/test/': [
+        './folder-1/folder-1/test',
+        './folder-1/folder-2/test',
+        './folder-2/folder-1/test',
+        './folder-2/folder-2/test',
+      ],
+    })
   })
 })

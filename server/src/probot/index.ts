@@ -1,6 +1,6 @@
 import { Application, Context } from 'probot'
-import { getRepositoryConfiguration, GithubRepository } from '../github'
-import { EmmaConfig } from 'emma-json-schema'
+// import { getRepositoryConfiguration, GithubRepository } from '../github'
+// import { EmmaConfig } from 'emma-json-schema'
 
 // Probot
 
@@ -45,61 +45,57 @@ export = (app: Application) => {
 // Events
 
 async function handleInstallEvent(context: Context) {
-  const repositories = context.payload.repositories as GithubRepository[]
-
-  const repositoryConfigurations = await Promise.all(
-    repositories.map(repository =>
-      getRepositoryConfiguration(context, repository),
-    ),
-  )
-
-  const { prs, configurations } = repositoryConfigurations.reduce<{
-    prs: GithubRepository[]
-    configurations: (GithubRepository & EmmaConfig)[]
-  }>(
-    (acc, repositoryConfiguration) => {
-      if (repositoryConfiguration === null) {
-        return acc
-        // return {
-        //   ...acc,
-        //   prs: [...acc.prs, repositoryConfiguration],
-        // }
-      } else {
-        return acc
-        // return {
-        //   ...acc,
-        //   configurations: [...acc.configurations, repositoryConfiguration],
-        // }
-      }
-    },
-    { prs: [], configurations: [] },
-  )
-
-  // check every repository: if emma-config, use that, otherwise make PR
+  // const repositories = context.payload.repositories as GithubRepository[]
+  // const repositoryConfigurations = await Promise.all(
+  //   repositories.map(repository =>
+  //     getRepositoryConfiguration(context.github, repository),
+  //   ),
+  // )
+  // const { prs, configurations } = repositoryConfigurations.reduce<{
+  //   prs: GithubRepository[]
+  //   configurations: (GithubRepository & EmmaConfig)[]
+  // }>(
+  //   (acc, repositoryConfiguration) => {
+  //     if (repositoryConfiguration === null) {
+  //       return acc
+  //       // return {
+  //       //   ...acc,
+  //       //   prs: [...acc.prs, repositoryConfiguration],
+  //       // }
+  //     } else {
+  //       return acc
+  //       // return {
+  //       //   ...acc,
+  //       //   configurations: [...acc.configurations, repositoryConfiguration],
+  //       // }
+  //     }
+  //   },
+  //   { prs: [], configurations: [] },
+  // )
+  // // check every repository: if emma-config, use that, otherwise make PR
 }
 
 async function handleRepositoryPushEvent(context: Context) {
-  const configuration = await getRepositoryConfiguration(
-    context,
-    context.repo(),
-  )
-
-  if (configurationChanged(context.repo(), configuration)) {
-  }
+  // const configuration = await getRepositoryConfiguration(
+  //   context.github,
+  //   context.repo(),
+  // )
+  // // if (configurationChanged(context.repo(), configuration)) {
+  // // }
 }
 
 async function handleRepositoryInstallEvent(context: Context) {
-  const repositories = context.payload.repositories_added
+  // const repositories = context.payload.repositories_added
 }
 
 async function handleRepositoryUninstallEvent(context: Context) {
-  const repositories = context.payload.repositories_removed
+  // const repositories = context.payload.repositories_removed
 }
 
 async function handleUninstallEvent(context: Context) {}
 
 // Templates
 
-const PRTemplate = `
+// const PRTemplate = `
 
-`
+// `
