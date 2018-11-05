@@ -1,6 +1,5 @@
 import { Application, Context } from 'probot'
-// import { getRepositoryConfiguration, GithubRepository } from '../github'
-// import { EmmaConfig } from 'emma-json-schema'
+import { GithubRepository, getRepositoryConfigurations } from '../github'
 
 // Probot
 
@@ -42,37 +41,45 @@ export = (app: Application) => {
   app.on('installation.deleted', handleUninstallEvent)
 }
 
-// Events
+/**
+ *
+ * Event handlers.
+ *
+ */
 
 async function handleInstallEvent(context: Context) {
-  // const repositories = context.payload.repositories as GithubRepository[]
-  // const repositoryConfigurations = await Promise.all(
-  //   repositories.map(repository =>
-  //     getRepositoryConfiguration(context.github, repository),
-  //   ),
-  // )
-  // const { prs, configurations } = repositoryConfigurations.reduce<{
-  //   prs: GithubRepository[]
-  //   configurations: (GithubRepository & EmmaConfig)[]
-  // }>(
-  //   (acc, repositoryConfiguration) => {
-  //     if (repositoryConfiguration === null) {
-  //       return acc
-  //       // return {
-  //       //   ...acc,
-  //       //   prs: [...acc.prs, repositoryConfiguration],
-  //       // }
-  //     } else {
-  //       return acc
-  //       // return {
-  //       //   ...acc,
-  //       //   configurations: [...acc.configurations, repositoryConfiguration],
-  //       // }
-  //     }
-  //   },
-  //   { prs: [], configurations: [] },
-  // )
-  // // check every repository: if emma-config, use that, otherwise make PR
+  const repositories = context.payload.repositories as GithubRepository[]
+
+  const repositoriesInformation = await Promise.all(
+    repositories.map(async repository => {
+      const configuration = await getRepositoryConfigurations(
+        context.github,
+        repository,
+      )
+
+      return {
+        repository,
+        configuration,
+      }
+    }),
+  )
+
+  const actions = repositoriesInformation.map(async repositoryInformation => {
+    switch (repositoryInformation.configuration) {
+      case null: {
+        return createSetupPullRequest(
+          context.github,
+          repositoryInformation.repository,
+        )
+      }
+
+      default: {
+        return
+      }
+    }
+  })
+
+  await Promise.all(actions)
 }
 
 async function handleRepositoryPushEvent(context: Context) {
@@ -94,8 +101,8 @@ async function handleRepositoryUninstallEvent(context: Context) {
 
 async function handleUninstallEvent(context: Context) {}
 
-// Templates
-
-// const PRTemplate = `
-
-// `
+/**
+ *
+ * Workflows
+ *
+ */
