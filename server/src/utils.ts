@@ -19,6 +19,19 @@ export function getFirst<T>(list: T[], fn: (item: T) => boolean): T | null {
 
 /**
  *
+ * Removes duplicates from array.
+ *
+ * @param list
+ */
+export function dedupe<T>(list: T[]): T[] {
+  return list.reduce<T[]>((acc, el) => {
+    if (acc.includes(el)) return acc
+    else return acc.concat(el)
+  }, [])
+}
+
+/**
+ *
  * Downloads a file from the URL.
  *
  * @param uri

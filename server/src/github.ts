@@ -1,8 +1,9 @@
-import { EmmaConfig } from 'emma-json-schema'
-import { emmaConfigNames } from './config'
-import { getFirst, downloadFile } from './utils'
-import { parseConfig } from './parse'
 import { GitHubAPI } from 'probot/lib/github'
+import { EmmaConfig } from 'emma-json-schema'
+
+import { emmaConfigNames } from './config'
+import { downloadFile, dedupe } from './utils'
+import { parseConfig } from './parse'
 
 export interface GithubRepository {
   id: string
@@ -22,26 +23,37 @@ export interface GithubRepository {
 export async function getRepositoryConfiguration(
   github: GitHubAPI,
   repository: GithubRepository,
-): Promise<EmmaConfig | null> {
-  const possibleConfigurationFiles = await Promise.all(
-    emmaConfigNames.map(file => getContent(github, repository, file)),
+): Promise<EmmaConfig> {
+  const repoRootContents = await getContents(github, repository, '')
+
+  const configFiles = repoRootContents.filter(content =>
+    emmaConfigNames.includes(content.name),
   )
 
-  const possibleConfigurations = await Promise.all(
-    possibleConfigurationFiles
-      .filter(file => file.download_url !== null)
-      .map(async possibleConfigurationFile => {
-        const file = await downloadFile<EmmaConfig>(
-          possibleConfigurationFile.download_url!,
-        )
+  if (configFiles.length === 0) {
+    throw new Error('No config file found.')
+  }
 
-        return file
-      }),
+  const configurations: EmmaConfig[] = await Promise.all(
+    configFiles.map(async file => downloadFile(file.download_url!)),
   )
 
-  const configuration = getFirst(
-    possibleConfigurations,
-    config => parseConfig(config) !== null,
+  const configuration = configurations.reduce<EmmaConfig>(
+    (acc, config) => {
+      const validatedConfig = parseConfig(config)
+
+      if (validatedConfig) {
+        return {
+          boilerplates: dedupe([
+            ...acc.boilerplates,
+            ...validatedConfig.boilerplates,
+          ]),
+        }
+      } else {
+        return acc
+      }
+    },
+    { boilerplates: [] },
   )
 
   return configuration
@@ -74,7 +86,7 @@ export interface GithubContent {
  * @param ref
  * @param file
  */
-async function getContent(
+export async function getContent(
   github: GitHubAPI,
   repo: GithubRepository,
   path: string,
@@ -99,7 +111,7 @@ async function getContent(
  * @param ref
  * @param file
  */
-async function getContents(
+export async function getContents(
   github: GitHubAPI,
   repo: GithubRepository,
   path: string,

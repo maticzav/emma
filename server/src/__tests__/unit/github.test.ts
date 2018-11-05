@@ -1,9 +1,7 @@
 import { Application } from 'probot'
-import {
-  GithubRepository,
-  parsePathsFromGitGlob,
-  GithubContent,
-} from '../../github'
+import { parsePathsFromGitGlob, getContent, getContents } from '../../github'
+
+import * as fixtures from '../fixtures/unit/github'
 
 describe('Github functions work accordingly', () => {
   let app: Application
@@ -14,81 +12,88 @@ describe('Github functions work accordingly', () => {
   })
 
   // Tests
-  test('parsePathsForGitGlob parses paths correctly', async () => {
-    const contents: GithubContent[] = [
-      {
-        type: 'file',
-        encoding: 'encoding',
-        size: 2,
-        name: 'ignored',
-        path: 'path',
-        content: 'content',
-        sha: 'sha',
-        url: 'url',
-        git_url: 'git_url',
-        html_url: 'html_url',
-        download_url: 'download_url',
-        _links: {
-          git: 'git',
-          self: 'self',
-          html: 'html',
-        },
-      },
-      {
-        type: 'dir',
-        encoding: 'encoding',
-        size: 2,
-        name: 'folder-1',
-        path: 'path',
-        content: 'content',
-        sha: 'sha',
-        url: 'url',
-        git_url: 'git_url',
-        html_url: 'html_url',
-        download_url: 'download_url',
-        _links: {
-          git: 'git',
-          self: 'self',
-          html: 'html',
-        },
-      },
-      {
-        type: 'dir',
-        encoding: 'encoding',
-        size: 2,
-        name: 'folder-2',
-        path: 'path',
-        content: 'content',
-        sha: 'sha',
-        url: 'url',
-        git_url: 'git_url',
-        html_url: 'html_url',
-        download_url: 'download_url',
-        _links: {
-          git: 'git',
-          self: 'self',
-          html: 'html',
-        },
-      },
-    ]
 
+  test('getRepositoryConfiguration finds the correct configuration', async t => {})
+
+  test.only('getContent gets file', async t => {
     const github = {
       repos: {
-        getContent: jest.fn().mockReturnValue(Promise.resolve(contents)),
+        getContent: jest
+          .fn()
+          .mockReturnValue(Promise.resolve(fixtures.content)),
+      },
+    } as any
+
+    app.auth = () => Promise.resolve(github)
+    const git = await app.auth()
+
+    const res = await getContent(git, fixtures.repo, '')
+
+    expect(res).toEqual(fixtures.content)
+  })
+
+  test('getContent errors on folder', async t => {
+    const github = {
+      repos: {
+        getContent: jest
+          .fn()
+          .mockReturnValue(Promise.resolve(fixtures.contents)),
       },
     } as any
 
     app.auth = () => Promise.resolve(github)
 
-    const repo: GithubRepository = {
-      id: 'id',
-      node_id: 'node_id',
-      name: 'emma',
-      owner: 'maticzav',
-      full_name: 'maticzav/emma',
-      ref: 'master',
-      private: false,
-    }
+    const git = await app.auth()
+
+    const res = await getContent(git, fixtures.repo, '')
+
+    expect(res).toThrow()
+  })
+
+  test('getContents gets contents', async t => {
+    const github = {
+      repos: {
+        getContent: jest
+          .fn()
+          .mockReturnValue(Promise.resolve(fixtures.contents)),
+      },
+    } as any
+
+    app.auth = () => Promise.resolve(github)
+    const git = await app.auth()
+
+    const res = await getContents(git, fixtures.repo, '')
+
+    expect(res).toEqual(fixtures.contents)
+  })
+
+  test('getContents errors on file', async t => {
+    const github = {
+      repos: {
+        getContent: jest
+          .fn()
+          .mockReturnValue(Promise.resolve(fixtures.content)),
+      },
+    } as any
+
+    app.auth = () => Promise.resolve(github)
+    const git = await app.auth()
+
+    const res = await getContents(git, fixtures.repo, '')
+
+    expect(res).toThrow()
+  })
+
+  test('parsePathsForGitGlob parses paths correctly', async () => {
+    const github = {
+      repos: {
+        getContent: jest
+          .fn()
+          .mockReturnValue(Promise.resolve(fixtures.contentsFolders)),
+      },
+    } as any
+
+    app.auth = () => Promise.resolve(github)
 
     const paths = [
       './',
@@ -106,7 +111,11 @@ describe('Github functions work accordingly', () => {
 
     const parsedPaths = await Promise.all(
       paths.map(async path => {
-        const parsedPaths = await parsePathsFromGitGlob(git, repo, path)
+        const parsedPaths = await parsePathsFromGitGlob(
+          git,
+          fixtures.repo,
+          path,
+        )
 
         return { path, parsedPaths }
       }),
