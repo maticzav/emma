@@ -13,9 +13,9 @@ describe('Github functions work accordingly', () => {
 
   // Tests
 
-  test('getRepositoryConfiguration finds the correct configuration', async t => {})
+  test('getRepositoryConfiguration finds the correct configuration', async () => {})
 
-  test.only('getContent gets file', async t => {
+  test('getContent gets file', async () => {
     const github = {
       repos: {
         getContent: jest
@@ -28,11 +28,10 @@ describe('Github functions work accordingly', () => {
     const git = await app.auth()
 
     const res = await getContent(git, fixtures.repo, '')
-
     expect(res).toEqual(fixtures.content)
   })
 
-  test('getContent errors on folder', async t => {
+  test('getContent errors on folder', async () => {
     const github = {
       repos: {
         getContent: jest
@@ -45,12 +44,11 @@ describe('Github functions work accordingly', () => {
 
     const git = await app.auth()
 
-    const res = await getContent(git, fixtures.repo, '')
-
-    expect(res).toThrow()
+    const res = getContent(git, fixtures.repo, '')
+    expect(res).rejects.toThrow()
   })
 
-  test('getContents gets contents', async t => {
+  test('getContents gets contents', async () => {
     const github = {
       repos: {
         getContent: jest
@@ -63,11 +61,10 @@ describe('Github functions work accordingly', () => {
     const git = await app.auth()
 
     const res = await getContents(git, fixtures.repo, '')
-
     expect(res).toEqual(fixtures.contents)
   })
 
-  test('getContents errors on file', async t => {
+  test('getContents errors on file', async () => {
     const github = {
       repos: {
         getContent: jest
@@ -79,9 +76,8 @@ describe('Github functions work accordingly', () => {
     app.auth = () => Promise.resolve(github)
     const git = await app.auth()
 
-    const res = await getContents(git, fixtures.repo, '')
-
-    expect(res).toThrow()
+    const res = getContents(git, fixtures.repo, '')
+    expect(res).rejects.toThrow()
   })
 
   test('parsePathsForGitGlob parses paths correctly', async () => {
