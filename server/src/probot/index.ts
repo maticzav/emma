@@ -1,7 +1,7 @@
 import { Application, Context } from 'probot'
 import { GithubRepository } from '../github'
 import {
-  analyseRepository,
+  installRepository,
   removeBoilerplate,
   removeInstallation,
 } from '../emma'
@@ -56,18 +56,26 @@ async function handleInstallEvent(context: Context) {
   const repositories = context.payload.repositories as GithubRepository[]
 
   const actions = repositories.map(repository =>
-    analyseRepository(context.github, repository),
+    installRepository(context.github, repository, context.payload.installation),
   )
 
   await Promise.all(actions)
 }
 
 async function handleRepositoryPushEvent(context: Context) {
-  await analyseRepository(context.github, context.repo())
+  await installRepository(
+    context.github,
+    context.repo(),
+    context.payload.installation,
+  )
 }
 
 async function handleRepositoryInstallEvent(context: Context) {
-  await analyseRepository(context.github, context.repo())
+  await installRepository(
+    context.github,
+    context.repo(),
+    context.payload.installation,
+  )
 }
 
 async function handleRepositoryUninstallEvent(context: Context) {

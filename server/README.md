@@ -65,6 +65,16 @@ Configuration issue is filed whenever something in configuration is not properly
 Configuration issue filed by Emma should include concise description of what went wrong
 and how to fix it.
 
+### Boilerplate Installation
+
+Every time a boilerplate is installed we first check whether we can make it accessible to everyone or not.
+
+1. Root of boilerplate should include `package.json` with required `name`, `description` and `private` properies.
+1. Boilerplate has to be `public` (`{ private: false }`).
+1. Bolerplate name must still be available. Otherwise file a boilerplate [configuration issue](#boilerplate-configuration-issue).
+
+If all tests pass, the boilerplate is saved to Mongo and updated in Algolia.
+
 #### Boilerplate configuration issue
 
 Boilerplate configuration issue is created whenever there's a problem with one of the boilerplates
@@ -81,15 +91,21 @@ themselves. They should include `name`, `description` and `private` property.
 
 > `private` repositories will be ignored. _They are not treated as wrongly configured boilerplate._
 
-### Boilerplate Installation
+### Adding repositories
 
-Every time a boilerplate is installed we first check whether we can make it accessible to everyone or not.
+Whenever we add a repository to an installation, we should repeat the repository [installation](#repository-installation) process.
 
-1. Root of boilerplate should include `package.json` with required `name`, `description` and `private` properies.
-1. Boilerplate has to be `public` (`{ private: false }`).
-1. Bolerplate name must still be available. Otherwise file a boilerplate [configuration issue](#boilerplate-configuration-issue).
+### Removing repositories
 
-If all tests pass, the boilerplate is saved to Mongo and updated in Algolia.
+Whenever a repository is removed from an installation, we should delete the boilerplate and remove algolia instance.
+
+### Making changes in repository
+
+Whenever we make changes in the repo, we should repeat the repository [installation](#repository-installation) process.
+
+### Uninstalling Emma
+
+Whenever Emma is uninstalled, we should delete all boilerplates and remove their algolia instances.
 
 ## License
 

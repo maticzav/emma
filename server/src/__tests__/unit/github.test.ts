@@ -326,24 +326,12 @@ describe('Github functions work accordingly', () => {
       { id: 'installation_id' },
     )
 
-    await expect(res).toEqual({
-      name: fixtures.definitionPublic.name,
-      description: fixtures.definitionPublic.description,
-      path: '/repo/path',
-      repository: {
-        owner: fixtures.repo.owner,
-        name: fixtures.repo.name,
-        branch: fixtures.repo.ref,
-      },
-      installation: {
-        id: 'installation_id',
-      },
-    })
+    expect(res).toEqual(fixtures.definitionPublic)
 
     mock.mockRestore()
   })
 
-  test('getBoilerplateDefinitionForPath throws whe missing package.json in boilerplate', async () => {
+  test('getBoilerplateDefinitionForPath returns null whe missing package.json in boilerplate', async () => {
     const github = {
       repos: {
         getContent: jest.fn().mockResolvedValue([fixtures.content]),
@@ -356,39 +344,14 @@ describe('Github functions work accordingly', () => {
     const mock = jest.spyOn(utils, 'downloadFile')
     mock.mockImplementation(() => fixtures.definitionPublic)
 
-    const res = getBoilerplateDefinitionForPath(
+    const res = await getBoilerplateDefinitionForPath(
       git,
       fixtures.repo,
       '/repo/path',
       { id: 'installation_id' },
     )
 
-    await expect(res).rejects.toThrow()
-
-    mock.mockRestore()
-  })
-
-  test('getBoilerplateDefinitionForPath throws on private boilerplate', async () => {
-    const github = {
-      repos: {
-        getContent: jest.fn().mockResolvedValue(fixtures.contents),
-      },
-    }
-
-    app.auth = () => Promise.resolve(github as any)
-    const git = await app.auth()
-
-    const mock = jest.spyOn(utils, 'downloadFile')
-    mock.mockImplementation(() => fixtures.definitionPrivate)
-
-    const res = getBoilerplateDefinitionForPath(
-      git,
-      fixtures.repo,
-      '/repo/path',
-      { id: 'installation_id' },
-    )
-
-    await expect(res).rejects.toThrow()
+    expect(res).toBeNull()
 
     mock.mockRestore()
   })

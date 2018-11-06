@@ -11,7 +11,6 @@ import { EmmaConfig } from 'emma-json-schema'
 import * as config from './config'
 import { parseConfig } from './parse'
 import { dedupe, downloadFile } from './utils'
-import { Boilerplate } from './models/boilerplate'
 
 /**
  *
@@ -507,38 +506,13 @@ export async function getBoilerplateDefinitionForPath(
   repository: GithubRepository,
   path: string,
   installation: GithubInstallation,
-): Promise<Boilerplate> {
-  try {
-    const files = await getContents(github, repository, path)
+): Promise<PackageDefinition | null> {
+  const files = await getContents(github, repository, path)
+  const definitionContent = files.find(file => file.name === 'package.json')
 
-    const definitionContent = files.find(file => file.name === 'package.json')
-
-    if (!definitionContent) {
-      throw new Error(`Missing package.json file.`)
-    }
-
-    const definition: PackageDefinition = await downloadFile(
-      definitionContent.download_url!,
-    )
-
-    if (definition.private) {
-      throw new Error(`Found private module.`)
-    }
-
-    return {
-      name: definition.name,
-      description: definition.description,
-      path: path,
-      repository: {
-        owner: repository.owner,
-        name: repository.name,
-        branch: repository.ref,
-      },
-      installation: {
-        id: installation.id,
-      },
-    }
-  } catch (err) {
-    throw new Error(`No boilerplate definition found at ${path}`)
+  if (!definitionContent) {
+    return null
+  } else {
+    return downloadFile<PackageDefinition>(definitionContent.download_url!)
   }
 }
