@@ -1,5 +1,13 @@
 import { Application, Context } from 'probot'
-import { GithubRepository, getRepositoryConfigurations } from '../github'
+import {
+  GithubRepository,
+  getRepositoryConfigurations,
+  createProjectSetupBranch,
+  createSetupPullRequest,
+  mergeConfigurations,
+  parsePathsFromGitGlob,
+} from '../github'
+import { downloadFile } from '../utils'
 
 // Probot
 
@@ -52,28 +60,50 @@ async function handleInstallEvent(context: Context) {
 
   const repositoriesInformation = await Promise.all(
     repositories.map(async repository => {
-      const configuration = await getRepositoryConfigurations(
+      const configurationFiles = await getRepositoryConfigurations(
         context.github,
         repository,
       )
 
       return {
         repository,
-        configuration,
+        configurationFiles,
       }
     }),
   )
 
   const actions = repositoriesInformation.map(async repositoryInformation => {
-    switch (repositoryInformation.configuration) {
+    switch (repositoryInformation.configurationFiles) {
       case null: {
-        return createSetupPullRequest(
+        const branch = await createProjectSetupBranch(
           context.github,
-          repositoryInformation.repository,
+          context.repo(),
+          [],
         )
+
+        const pullRequest = await createSetupPullRequest(
+          context.github,
+          context.repo(),
+          '',
+        )
+
+        return
       }
 
       default: {
+        const configurations = await Promise.all(
+          repositoryInformation.configurationFiles.map(file =>
+            downloadFile(file.download_url!),
+          ),
+        )
+
+        const configuration = mergeConfigurations(configurations)
+        const paths = await Promise.resolve(
+          configuration.boilerplates.map(glob =>
+            parsePathsFromGitGlob(context.github, context.repo(), glob),
+          ),
+        )
+
         return
       }
     }

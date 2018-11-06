@@ -238,7 +238,7 @@ export const contentEmmarcJson: GithubContent = {
  */
 
 export const configuration: EmmaConfig = {
-  boilerplates: ['glob'],
+  boilerplates: ['glob', 'glob/*'],
 }
 
 export const configurations: EmmaConfig[] = [

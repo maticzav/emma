@@ -282,6 +282,30 @@ export async function parsePathsFromGitGlob(
 
 /**
  *
+ * Obtains a lits of boilerplates' paths that configuration describes.
+ *
+ * @param github
+ * @param repository
+ * @param config
+ */
+export async function getBoilerplatePathsFromConfiguration(
+  github: GitHubAPI,
+  repository: GithubRepository,
+  config: EmmaConfig,
+): Promise<string[]> {
+  const pathsForGlob = await Promise.all(
+    config.boilerplates.map(async glob =>
+      parsePathsFromGitGlob(github, repository, glob),
+    ),
+  )
+
+  const allPaths = pathsForGlob.reduce((acc, paths) => [...acc, ...paths], [])
+
+  return allPaths
+}
+
+/**
+ *
  * Pull requests
  *
  */
@@ -363,6 +387,14 @@ export interface File {
   encoding: string
 }
 
+/**
+ *
+ * Creates a new branch containing the setup files.
+ *
+ * @param github
+ * @param repository
+ * @param files
+ */
 export async function createProjectSetupBranch(
   github: GitHubAPI,
   repository: GithubRepository,

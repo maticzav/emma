@@ -9,6 +9,7 @@ import {
   createSetupPullRequest,
   setupPullRequestTemplate,
   getBoilerplateDefinitionForPath,
+  getBoilerplatePathsFromConfiguration,
 } from '../../github'
 import * as utils from '../../utils'
 
@@ -151,6 +152,7 @@ describe('Github functions work accordingly', () => {
     const paths = [
       './',
       '.',
+      'folder',
       './folder',
       './nested/folder',
       './folders/*',
@@ -185,6 +187,7 @@ describe('Github functions work accordingly', () => {
     expect(parsedPaths).toEqual({
       './': ['.'],
       '.': ['.'],
+      folder: ['folder'],
       './folder': ['./folder'],
       './nested/folder': ['./nested/folder'],
       './folders/*': ['./folders/folder-1', './folders/folder-2'],
@@ -206,6 +209,25 @@ describe('Github functions work accordingly', () => {
         './folder-2/folder-2/test',
       ],
     })
+  })
+
+  test('getBoilerplatePathsFromConfiguration finds the correct values', async () => {
+    const github = {
+      repos: {
+        getContent: jest.fn().mockResolvedValue(fixtures.contentsFolders),
+      },
+    }
+
+    app.auth = () => Promise.resolve(github as any)
+    const git = await app.auth()
+
+    const paths = await getBoilerplatePathsFromConfiguration(
+      git,
+      fixtures.repo,
+      fixtures.configuration,
+    )
+
+    expect(paths).toEqual(['glob', 'glob/folder-1', 'glob/folder-2'])
   })
 
   test('createProjectSetupBranch correctly creates a new branch', async () => {
@@ -294,7 +316,7 @@ describe('Github functions work accordingly', () => {
       'installation_id',
     )
 
-    expect(res).toEqual({
+    await expect(res).toEqual({
       name: fixtures.definitionPublic.name,
       description: fixtures.definitionPublic.description,
       path: '/repo/path',
@@ -311,7 +333,7 @@ describe('Github functions work accordingly', () => {
     mock.mockRestore()
   })
 
-  test('getBoilerplateDefinitionForPath throws on undefined module', async () => {
+  test('getBoilerplateDefinitionForPath throws whe missing package.json in boilerplate', async () => {
     const github = {
       repos: {
         getContent: jest.fn().mockResolvedValue([fixtures.content]),
@@ -331,12 +353,12 @@ describe('Github functions work accordingly', () => {
       'installation_id',
     )
 
-    expect(res).rejects.toThrow()
+    await expect(res).rejects.toThrow()
 
     mock.mockRestore()
   })
 
-  test('getBoilerplateDefinitionForPath throws on private', async () => {
+  test('getBoilerplateDefinitionForPath throws on private boilerplate', async () => {
     const github = {
       repos: {
         getContent: jest.fn().mockResolvedValue(fixtures.contents),
@@ -356,7 +378,7 @@ describe('Github functions work accordingly', () => {
       'installation_id',
     )
 
-    expect(res).rejects.toThrow()
+    await expect(res).rejects.toThrow()
 
     mock.mockRestore()
   })
