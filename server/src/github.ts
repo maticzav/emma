@@ -8,7 +8,7 @@ import {
 } from '@octokit/rest'
 import { EmmaConfig } from 'emma-json-schema'
 
-import { emmaConfigNames } from './config'
+import * as config from './config'
 import { parseConfig } from './parse'
 import { dedupe, downloadFile } from './utils'
 import { Boilerplate } from './models/boilerplate'
@@ -36,21 +36,25 @@ export interface GithubRepository {
  * @param context
  * @param repository
  */
-export async function getRepositoryConfigurations(
+export async function getRepositoryConfiguration(
   github: GitHubAPI,
   repository: GithubRepository,
-): Promise<GithubContent[] | null> {
+): Promise<EmmaConfig | null> {
   const repoRootContents = await getContents(github, repository)
-
   const configFiles = repoRootContents.filter(content =>
-    emmaConfigNames.includes(content.name),
+    config.emmaConfigNames.includes(content.name),
   )
 
   if (configFiles.length === 0) {
     return null
-  } else {
-    return configFiles
   }
+
+  const configurations = await Promise.all(
+    configFiles.map(file => downloadFile(file.download_url!)),
+  )
+  const configuration = mergeConfigurations(configurations)
+
+  return configuration
 }
 
 /**
@@ -326,7 +330,7 @@ export async function createSetupPullRequest(
     owner: repository.owner,
     repo: repository.name,
     title: `Hey, it's Emma Boilerplates 👋`,
-    head: 'emma/setup',
+    head: config.emmaSetupBranchHead,
     base: 'master',
     body: setupPullRequestTemplate(analysis),
   })
@@ -400,7 +404,7 @@ export async function createProjectSetupBranch(
   repository: GithubRepository,
   files: File[],
 ): Promise<Response<GitdataUpdateReferenceResponse>> {
-  const branch = await createBranchReference('emma/setup')
+  const branch = await createBranchReference(config.emmaSetupBranchHead)
 
   const blobs: GithubBlob[] = await Promise.all(
     files.map<Promise<GithubBlob>>(async file => {
@@ -486,6 +490,10 @@ export interface PackageDefinition {
   [key: string]: any
 }
 
+export interface GithubInstallation {
+  id: string
+}
+
 /**
  *
  * Obtains boilerplate definition for given path.
@@ -498,7 +506,7 @@ export async function getBoilerplateDefinitionForPath(
   github: GitHubAPI,
   repository: GithubRepository,
   path: string,
-  installation: string,
+  installation: GithubInstallation,
 ): Promise<Boilerplate> {
   try {
     const files = await getContents(github, repository, path)
@@ -527,7 +535,7 @@ export async function getBoilerplateDefinitionForPath(
         branch: repository.ref,
       },
       installation: {
-        id: installation,
+        id: installation.id,
       },
     }
   } catch (err) {

@@ -5,3 +5,5 @@ export const emmaConfigNames = [
   // 'package.json',
   // 'emma.config.js',
 ]
+
+export const emmaSetupBranchHead = 'emma/setup'

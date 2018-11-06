@@ -185,7 +185,7 @@ export const contentEmmaJson: GithubContent = {
   url: 'url',
   git_url: 'git_url',
   html_url: 'html_url',
-  download_url: 'download_url',
+  download_url: 'download_url/emma.json',
   _links: {
     git: 'git',
     self: 'self',
@@ -204,7 +204,7 @@ export const contentEmmarc: GithubContent = {
   url: 'url',
   git_url: 'git_url',
   html_url: 'html_url',
-  download_url: 'download_url',
+  download_url: 'download_url/.emmarc',
   _links: {
     git: 'git',
     self: 'self',
@@ -223,7 +223,7 @@ export const contentEmmarcJson: GithubContent = {
   url: 'url',
   git_url: 'git_url',
   html_url: 'html_url',
-  download_url: 'download_url',
+  download_url: 'download_url/.emmarc.json',
   _links: {
     git: 'git',
     self: 'self',

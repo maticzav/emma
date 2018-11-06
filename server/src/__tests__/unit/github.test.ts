@@ -3,7 +3,7 @@ import {
   parsePathsFromGitGlob,
   getContent,
   getContents,
-  getRepositoryConfigurations,
+  getRepositoryConfiguration,
   mergeConfigurations,
   createProjectSetupBranch,
   createSetupPullRequest,
@@ -25,7 +25,7 @@ describe('Github functions work accordingly', () => {
 
   // Tests
 
-  test('getRepositoryConfigurationFiles finds correct files', async () => {
+  test('getRepositoryConfiguration finds correct configuration', async () => {
     const github = {
       repos: {
         getContent: jest
@@ -37,30 +37,40 @@ describe('Github functions work accordingly', () => {
             fixtures.content,
           ]),
       },
-    } as any
+    }
 
-    app.auth = () => Promise.resolve(github)
+    app.auth = () => Promise.resolve(github as any)
     const git = await app.auth()
 
-    const res = await getRepositoryConfigurations(git, fixtures.repo)
-    expect(res).toEqual([
-      fixtures.contentEmmaJson,
-      fixtures.contentEmmarc,
-      fixtures.contentEmmarcJson,
-    ])
+    const mock = jest.spyOn(utils, 'downloadFile')
+    mock.mockImplementation(() => fixtures.configuration)
+
+    expect.assertions(4)
+
+    const res = await getRepositoryConfiguration(git, fixtures.repo)
+
+    expect(res).toEqual(fixtures.configuration)
+
+    const { contentEmmaJson, contentEmmarc, contentEmmarcJson } = fixtures
+
+    expect(mock).toHaveBeenNthCalledWith(1, contentEmmaJson.download_url)
+    expect(mock).toHaveBeenNthCalledWith(2, contentEmmarc.download_url)
+    expect(mock).toHaveBeenNthCalledWith(3, contentEmmarcJson.download_url)
+
+    mock.mockRestore()
   })
 
-  test('getRepositoryConfigurationFiles returns null when no files configuration files exist', async () => {
+  test('getRepositoryConfiguration returns null when no configuration files exist', async () => {
     const github = {
       repos: {
         getContent: jest.fn().mockResolvedValue(fixtures.contents),
       },
-    } as any
+    }
 
-    app.auth = () => Promise.resolve(github)
+    app.auth = () => Promise.resolve(github as any)
     const git = await app.auth()
 
-    const res = await getRepositoryConfigurations(git, fixtures.repo)
+    const res = await getRepositoryConfiguration(git, fixtures.repo)
     expect(res).toBeNull()
   })
 
@@ -313,7 +323,7 @@ describe('Github functions work accordingly', () => {
       git,
       fixtures.repo,
       '/repo/path',
-      'installation_id',
+      { id: 'installation_id' },
     )
 
     await expect(res).toEqual({
@@ -350,7 +360,7 @@ describe('Github functions work accordingly', () => {
       git,
       fixtures.repo,
       '/repo/path',
-      'installation_id',
+      { id: 'installation_id' },
     )
 
     await expect(res).rejects.toThrow()
@@ -375,7 +385,7 @@ describe('Github functions work accordingly', () => {
       git,
       fixtures.repo,
       '/repo/path',
-      'installation_id',
+      { id: 'installation_id' },
     )
 
     await expect(res).rejects.toThrow()
