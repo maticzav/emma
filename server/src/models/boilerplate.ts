@@ -12,6 +12,11 @@ export interface Boilerplate {
   installation: {
     id: string
   }
+  github: {
+    issue?: number
+    pr?: number
+  }
+  public: boolean
 }
 
 const boilerplateSchema = new Schema({
@@ -26,6 +31,11 @@ const boilerplateSchema = new Schema({
   installation: {
     id: { type: String, unique: false, required: true },
   },
+  github: {
+    issue: { type: Number, unique: false, require: false },
+    pr: { type: Number, unique: false, require: false },
+  },
+  public: { type: Boolean, required: true, default: false },
 })
 
 export const Boilerplate = model('Boilerplate', boilerplateSchema)
