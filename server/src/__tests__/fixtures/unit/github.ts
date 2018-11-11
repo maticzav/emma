@@ -4,6 +4,7 @@ import {
   File,
   GithubReference,
   PackageDefinition,
+  GithubPartialRepository,
 } from '../../../github'
 import { EmmaConfig } from 'emma-json-schema'
 import {
@@ -165,6 +166,14 @@ export const repo: GithubRepository = {
   owner: 'maticzav',
   full_name: 'maticzav/emma',
   ref: 'master',
+  private: false,
+}
+
+export const partialRepo: GithubPartialRepository = {
+  id: 'id',
+  node_id: 'node_id',
+  name: 'emma',
+  full_name: 'maticzav/emma',
   private: false,
 }
 

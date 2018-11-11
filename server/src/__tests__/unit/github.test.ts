@@ -10,6 +10,7 @@ import {
   setupPullRequestTemplate,
   getBoilerplateDefinitionForPath,
   getBoilerplatePathsFromConfiguration,
+  hydratePartialRepository,
 } from '../../github'
 import * as utils from '../../utils'
 
@@ -24,6 +25,20 @@ describe('Github functions work accordingly', () => {
   })
 
   // Tests
+
+  test('hydratePartialRepository hydrates partial repository correctly', async () => {
+    const repo = hydratePartialRepository(fixtures.partialRepo)
+
+    expect(repo).toEqual({
+      id: 'id',
+      node_id: 'node_id',
+      name: 'emma',
+      owner: 'maticzav',
+      full_name: 'maticzav/emma',
+      ref: 'master',
+      private: false,
+    })
+  })
 
   test('getRepositoryConfiguration finds correct configuration', async () => {
     const github = {

@@ -28,6 +28,38 @@ export interface GithubRepository {
   private: boolean
 }
 
+export interface GithubPartialRepository {
+  id: string
+  node_id: string
+  name: string
+  full_name: string
+  private: boolean
+}
+
+/**
+ *
+ * Hydrates partial repository into a GithubRepository.
+ * This is particularly useful with events which return partial
+ * repository information.
+ *
+ * @param repository
+ */
+export function hydratePartialRepository(
+  repository: GithubPartialRepository,
+): GithubRepository {
+  const owner = repository.full_name.replace(`/${repository.name}`, '')
+
+  return {
+    id: repository.id,
+    node_id: repository.node_id,
+    owner: owner,
+    name: repository.name,
+    full_name: repository.full_name,
+    ref: 'master',
+    private: repository.private,
+  }
+}
+
 /**
  *
  * Finds the files which contain Emma configuration in repository.

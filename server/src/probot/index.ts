@@ -1,9 +1,10 @@
 import { Application, Context } from 'probot'
-import { GithubRepository } from '../github'
+import { GithubPartialRepository, GithubRepository } from '../github'
 import {
   installRepository,
-  removeBoilerplate,
   removeInstallation,
+  installPartialRepository,
+  removePartialRepository,
 } from '../emma'
 
 // Probot
@@ -15,6 +16,13 @@ export = (app: Application) => {
    *
    */
   app.on('installation.created', handleInstallEvent)
+
+  /**
+   *
+   * Triggered whenever Emma is uninstalled by a user.
+   *
+   */
+  app.on('installation.deleted', handleUninstallEvent)
 
   /**
    *
@@ -37,13 +45,6 @@ export = (app: Application) => {
    *
    */
   app.on('push', handleRepositoryPushEvent)
-
-  /**
-   *
-   * Triggered whenever Emma is uninstalled by a user.
-   *
-   */
-  app.on('installation.deleted', handleUninstallEvent)
 }
 
 /**
@@ -53,36 +54,47 @@ export = (app: Application) => {
  */
 
 async function handleInstallEvent(context: Context) {
-  const repositories = context.payload.repositories as GithubRepository[]
+  const repositories = context.payload.repositories as GithubPartialRepository[]
+  const installation = context.payload.installation
 
   const actions = repositories.map(repository =>
-    installRepository(context.github, repository, context.payload.installation),
+    installPartialRepository(context.github, repository, installation),
   )
 
   await Promise.all(actions)
 }
 
 async function handleRepositoryPushEvent(context: Context) {
-  await installRepository(
-    context.github,
-    context.repo(),
-    context.payload.installation,
-  )
+  const repository: GithubRepository = context.repo()
+  const installation = context.payload.installation
+
+  await installRepository(context.github, repository, installation)
 }
 
 async function handleRepositoryInstallEvent(context: Context) {
-  await installRepository(
-    context.github,
-    context.repo(),
-    context.payload.installation,
+  const installation = context.payload.installation
+  const repositories = context.payload
+    .repositories_added as GithubPartialRepository[]
+
+  const actions = repositories.map(repository =>
+    installPartialRepository(context.github, repository, installation),
   )
+
+  await Promise.all(actions)
 }
 
 async function handleRepositoryUninstallEvent(context: Context) {
-  const repositories = context.payload.repositories
-  await removeBoilerplate('')
+  const repositories = context.payload.repositories as GithubPartialRepository[]
+
+  const actions = repositories.map(repository =>
+    removePartialRepository(repository),
+  )
+
+  await Promise.all(actions)
 }
 
 async function handleUninstallEvent(context: Context) {
-  await removeInstallation('')
+  const installation = context.payload.installation
+
+  await removeInstallation(installation)
 }

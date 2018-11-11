@@ -3,6 +3,7 @@ import { EmmaConfig } from 'emma-json-schema'
 
 import {
   GithubRepository,
+  GithubPartialRepository,
   GithubInstallation,
   PackageDefinition,
   getRepositoryConfiguration,
@@ -10,6 +11,7 @@ import {
   createSetupPullRequest,
   getBoilerplatePathsFromConfiguration,
   getBoilerplateDefinitionForPath,
+  hydratePartialRepository,
 } from './github'
 
 /**
@@ -17,6 +19,24 @@ import {
  * Installation
  *
  */
+
+/**
+ *
+ * Installs partial repository,
+ *
+ * @param github
+ * @param repository
+ * @param installation
+ */
+export async function installPartialRepository(
+  github: GitHubAPI,
+  partialRepository: GithubPartialRepository,
+  installation: GithubInstallation,
+): Promise<void> {
+  const repository = hydratePartialRepository(partialRepository)
+
+  return installRepository(github, repository, installation)
+}
 
 /**
  *
@@ -228,21 +248,31 @@ export async function guessBoilerplateConfigurationForRepository(
  *
  */
 
+export async function removePartialRepository(
+  partialRepository: GithubPartialRepository,
+): Promise<void> {
+  return removeRepository(hydratePartialRepository(partialRepository))
+}
+
 /**
  *
- * Removes specific boilerplate from the database.
+ * Removes specific repository and all its boilerplates from the database.
  *
- * @param id
+ * @param repository
  */
-export async function removeBoilerplate(id: string): Promise<void> {}
+export async function removeRepository(
+  repository: GithubRepository,
+): Promise<void> {}
 
 /**
  *
  * Removes all boilerplates in installation from the database.
  *
- * @param id
+ * @param installation
  */
-export async function removeInstallation(id: string): Promise<void> {}
+export async function removeInstallation(
+  installation: GithubInstallation,
+): Promise<void> {}
 
 /**
  *
