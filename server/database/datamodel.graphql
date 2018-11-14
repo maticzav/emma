@@ -24,8 +24,8 @@ type Repository {
   boilerplates: [Boilerplate!]!
     @relation(name: "RepositoryBoilerplate", onDelete: CASCADE)
 
-  githubIssue: Int!
-  githubPR: Int!
+  # githubIssue: Int!
+  # githubPR: Int!
 
   installation: Installation!
     @relation(name: "InstallationRepository", onDelete: SET_NULL)

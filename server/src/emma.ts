@@ -7,8 +7,6 @@ import {
   GithubInstallation,
   PackageDefinition,
   getRepositoryConfiguration,
-  createProjectSetupBranch,
-  createSetupPullRequest,
   getBoilerplatePathsFromConfiguration,
   getBoilerplateDefinitionForPath,
   hydratePartialRepository,
@@ -68,17 +66,12 @@ export async function installRepository(
   installation: GithubInstallation,
 ): Promise<RepositoryInstallationSummary> {
   /**
-   * Creates issue and branch which are going to be used for notifications.
+   * Indexes a repository immediately for further usage.
    */
-  const branch = await createProjectSetupBranch(github, repository, [])
-  const pullRequest = await createSetupPullRequest(github, repository)
-
-  const indexedRepository = await prisma.createRepository({
+  await prisma.createRepository({
     githubId: repository.node_id,
     owner: repository.owner,
     name: repository.name,
-    githubIssue: 1,
-    githubPR: 2,
     installation: { connect: { githubId: installation.id } },
   })
 

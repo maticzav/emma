@@ -1,34 +1,43 @@
 import { ApolloServer, gql } from 'apollo-server'
-
-const books = [
-  {
-    title: 'Harry Potter and the Chamber of Secrets',
-    author: 'J.K. Rowling',
-  },
-  {
-    title: 'Jurassic Park',
-    author: 'Michael Crichton',
-  },
-]
+import { Prisma } from './generated/index'
 
 const typeDefs = gql`
-  type Book {
-    title: String
-    author: String
+  type Boilerplate {
+    id: ID! @unique
+    createdAt: DateTime!
+    updatedAt: DateTime!
+
+    name: String! @unique
+    description: String!
+    path: String!
+
+    repository: Repository!
   }
 
-  type Query {
-    books: [Book]
+  type Repository {
+    id: ID!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+
+    name: String!
+    owner: String!
+
+    boilerplates: [Boilerplate!]!
   }
 `
 
-const resolvers = {
-  Query: {
-    books: () => books,
-  },
-}
+const resolvers = {}
 
-const server = new ApolloServer({ typeDefs, resolvers })
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  context: () => ({
+    db: new Prisma({
+      endpoint: process.env.PRISMA_ENDPOINT!,
+      secret: process.env.PRISMA_SECRET!,
+    }),
+  }),
+})
 
 server.listen().then(({ url }) => {
   console.log(`🚀  Server ready at ${url}`)

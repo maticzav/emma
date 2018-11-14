@@ -5,6 +5,7 @@ import {
   GithubReference,
   PackageDefinition,
   GithubPartialRepository,
+  GithubInstallation,
 } from '../../../github'
 import { EmmaConfig } from 'emma-json-schema'
 import {
@@ -362,4 +363,14 @@ export const updateReferenceResponse: GitdataUpdateReferenceResponse = {
     url: 'url',
     type: 'type',
   },
+}
+
+/**
+ *
+ * Installation
+ *
+ */
+
+export const installation: GithubInstallation = {
+  id: 'id',
 }

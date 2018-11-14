@@ -433,8 +433,6 @@ type Repository {
   name: String!
   owner: String!
   boilerplates(where: BoilerplateWhereInput, orderBy: BoilerplateOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Boilerplate!]
-  githubIssue: Int!
-  githubPR: Int!
   installation: Installation!
 }
 
@@ -449,8 +447,6 @@ input RepositoryCreateInput {
   name: String!
   owner: String!
   boilerplates: BoilerplateCreateManyWithoutRepositoryInput
-  githubIssue: Int!
-  githubPR: Int!
   installation: InstallationCreateOneWithoutRepositoriesInput!
 }
 
@@ -468,8 +464,6 @@ input RepositoryCreateWithoutBoilerplatesInput {
   githubId: String!
   name: String!
   owner: String!
-  githubIssue: Int!
-  githubPR: Int!
   installation: InstallationCreateOneWithoutRepositoriesInput!
 }
 
@@ -478,8 +472,6 @@ input RepositoryCreateWithoutInstallationInput {
   name: String!
   owner: String!
   boilerplates: BoilerplateCreateManyWithoutRepositoryInput
-  githubIssue: Int!
-  githubPR: Int!
 }
 
 type RepositoryEdge {
@@ -500,10 +492,6 @@ enum RepositoryOrderByInput {
   name_DESC
   owner_ASC
   owner_DESC
-  githubIssue_ASC
-  githubIssue_DESC
-  githubPR_ASC
-  githubPR_DESC
 }
 
 type RepositoryPreviousValues {
@@ -513,8 +501,6 @@ type RepositoryPreviousValues {
   githubId: String!
   name: String!
   owner: String!
-  githubIssue: Int!
-  githubPR: Int!
 }
 
 type RepositorySubscriptionPayload {
@@ -540,8 +526,6 @@ input RepositoryUpdateInput {
   name: String
   owner: String
   boilerplates: BoilerplateUpdateManyWithoutRepositoryInput
-  githubIssue: Int
-  githubPR: Int
   installation: InstallationUpdateOneRequiredWithoutRepositoriesInput
 }
 
@@ -549,8 +533,6 @@ input RepositoryUpdateManyMutationInput {
   githubId: String
   name: String
   owner: String
-  githubIssue: Int
-  githubPR: Int
 }
 
 input RepositoryUpdateManyWithoutInstallationInput {
@@ -573,8 +555,6 @@ input RepositoryUpdateWithoutBoilerplatesDataInput {
   githubId: String
   name: String
   owner: String
-  githubIssue: Int
-  githubPR: Int
   installation: InstallationUpdateOneRequiredWithoutRepositoriesInput
 }
 
@@ -583,8 +563,6 @@ input RepositoryUpdateWithoutInstallationDataInput {
   name: String
   owner: String
   boilerplates: BoilerplateUpdateManyWithoutRepositoryInput
-  githubIssue: Int
-  githubPR: Int
 }
 
 input RepositoryUpdateWithWhereUniqueWithoutInstallationInput {
@@ -679,22 +657,6 @@ input RepositoryWhereInput {
   boilerplates_every: BoilerplateWhereInput
   boilerplates_some: BoilerplateWhereInput
   boilerplates_none: BoilerplateWhereInput
-  githubIssue: Int
-  githubIssue_not: Int
-  githubIssue_in: [Int!]
-  githubIssue_not_in: [Int!]
-  githubIssue_lt: Int
-  githubIssue_lte: Int
-  githubIssue_gt: Int
-  githubIssue_gte: Int
-  githubPR: Int
-  githubPR_not: Int
-  githubPR_in: [Int!]
-  githubPR_not_in: [Int!]
-  githubPR_lt: Int
-  githubPR_lte: Int
-  githubPR_gt: Int
-  githubPR_gte: Int
   installation: InstallationWhereInput
   AND: [RepositoryWhereInput!]
   OR: [RepositoryWhereInput!]

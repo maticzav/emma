@@ -227,10 +227,6 @@ export type RepositoryOrderByInput =
   | 'name_DESC'
   | 'owner_ASC'
   | 'owner_DESC'
-  | 'githubIssue_ASC'
-  | 'githubIssue_DESC'
-  | 'githubPR_ASC'
-  | 'githubPR_DESC'
 
 export type InstallationOrderByInput =
   | 'id_ASC'
@@ -248,8 +244,6 @@ export interface RepositoryUpdateWithoutBoilerplatesDataInput {
   githubId?: String
   name?: String
   owner?: String
-  githubIssue?: Int
-  githubPR?: Int
   installation?: InstallationUpdateOneRequiredWithoutRepositoriesInput
 }
 
@@ -342,18 +336,62 @@ export interface BoilerplateWhereInput {
   NOT?: BoilerplateWhereInput[] | BoilerplateWhereInput
 }
 
-export interface RepositoryCreateWithoutInstallationInput {
-  githubId: String
-  name: String
-  owner: String
-  boilerplates?: BoilerplateCreateManyWithoutRepositoryInput
-  githubIssue: Int
-  githubPR: Int
-}
-
 export interface RepositoryUpsertWithoutBoilerplatesInput {
   update: RepositoryUpdateWithoutBoilerplatesDataInput
   create: RepositoryCreateWithoutBoilerplatesInput
+}
+
+export interface InstallationWhereInput {
+  id?: ID_Input
+  id_not?: ID_Input
+  id_in?: ID_Input[] | ID_Input
+  id_not_in?: ID_Input[] | ID_Input
+  id_lt?: ID_Input
+  id_lte?: ID_Input
+  id_gt?: ID_Input
+  id_gte?: ID_Input
+  id_contains?: ID_Input
+  id_not_contains?: ID_Input
+  id_starts_with?: ID_Input
+  id_not_starts_with?: ID_Input
+  id_ends_with?: ID_Input
+  id_not_ends_with?: ID_Input
+  createdAt?: DateTimeInput
+  createdAt_not?: DateTimeInput
+  createdAt_in?: DateTimeInput[] | DateTimeInput
+  createdAt_not_in?: DateTimeInput[] | DateTimeInput
+  createdAt_lt?: DateTimeInput
+  createdAt_lte?: DateTimeInput
+  createdAt_gt?: DateTimeInput
+  createdAt_gte?: DateTimeInput
+  updatedAt?: DateTimeInput
+  updatedAt_not?: DateTimeInput
+  updatedAt_in?: DateTimeInput[] | DateTimeInput
+  updatedAt_not_in?: DateTimeInput[] | DateTimeInput
+  updatedAt_lt?: DateTimeInput
+  updatedAt_lte?: DateTimeInput
+  updatedAt_gt?: DateTimeInput
+  updatedAt_gte?: DateTimeInput
+  githubId?: String
+  githubId_not?: String
+  githubId_in?: String[] | String
+  githubId_not_in?: String[] | String
+  githubId_lt?: String
+  githubId_lte?: String
+  githubId_gt?: String
+  githubId_gte?: String
+  githubId_contains?: String
+  githubId_not_contains?: String
+  githubId_starts_with?: String
+  githubId_not_starts_with?: String
+  githubId_ends_with?: String
+  githubId_not_ends_with?: String
+  repositories_every?: RepositoryWhereInput
+  repositories_some?: RepositoryWhereInput
+  repositories_none?: RepositoryWhereInput
+  AND?: InstallationWhereInput[] | InstallationWhereInput
+  OR?: InstallationWhereInput[] | InstallationWhereInput
+  NOT?: InstallationWhereInput[] | InstallationWhereInput
 }
 
 export interface BoilerplateCreateInput {
@@ -361,6 +399,31 @@ export interface BoilerplateCreateInput {
   description: String
   path: String
   repository: RepositoryCreateOneWithoutBoilerplatesInput
+}
+
+export interface RepositoryCreateWithoutInstallationInput {
+  githubId: String
+  name: String
+  owner: String
+  boilerplates?: BoilerplateCreateManyWithoutRepositoryInput
+}
+
+export interface RepositoryCreateOneWithoutBoilerplatesInput {
+  create?: RepositoryCreateWithoutBoilerplatesInput
+  connect?: RepositoryWhereUniqueInput
+}
+
+export interface BoilerplateUpdateManyMutationInput {
+  name?: String
+  description?: String
+  path?: String
+}
+
+export interface RepositoryCreateWithoutBoilerplatesInput {
+  githubId: String
+  name: String
+  owner: String
+  installation: InstallationCreateOneWithoutRepositoriesInput
 }
 
 export interface InstallationSubscriptionWhereInput {
@@ -378,26 +441,19 @@ export interface InstallationSubscriptionWhereInput {
     | InstallationSubscriptionWhereInput
 }
 
-export interface RepositoryCreateOneWithoutBoilerplatesInput {
-  create?: RepositoryCreateWithoutBoilerplatesInput
-  connect?: RepositoryWhereUniqueInput
+export interface InstallationCreateOneWithoutRepositoriesInput {
+  create?: InstallationCreateWithoutRepositoriesInput
+  connect?: InstallationWhereUniqueInput
 }
 
 export interface RepositoryUpdateManyMutationInput {
   githubId?: String
   name?: String
   owner?: String
-  githubIssue?: Int
-  githubPR?: Int
 }
 
-export interface RepositoryCreateWithoutBoilerplatesInput {
+export interface InstallationCreateWithoutRepositoriesInput {
   githubId: String
-  name: String
-  owner: String
-  githubIssue: Int
-  githubPR: Int
-  installation: InstallationCreateOneWithoutRepositoriesInput
 }
 
 export interface RepositoryCreateInput {
@@ -405,30 +461,7 @@ export interface RepositoryCreateInput {
   name: String
   owner: String
   boilerplates?: BoilerplateCreateManyWithoutRepositoryInput
-  githubIssue: Int
-  githubPR: Int
   installation: InstallationCreateOneWithoutRepositoriesInput
-}
-
-export interface InstallationCreateOneWithoutRepositoriesInput {
-  create?: InstallationCreateWithoutRepositoriesInput
-  connect?: InstallationWhereUniqueInput
-}
-
-export interface RepositoryUpsertWithWhereUniqueWithoutInstallationInput {
-  where: RepositoryWhereUniqueInput
-  update: RepositoryUpdateWithoutInstallationDataInput
-  create: RepositoryCreateWithoutInstallationInput
-}
-
-export interface InstallationCreateWithoutRepositoriesInput {
-  githubId: String
-}
-
-export interface BoilerplateUpsertWithWhereUniqueWithoutRepositoryInput {
-  where: BoilerplateWhereUniqueInput
-  update: BoilerplateUpdateWithoutRepositoryDataInput
-  create: BoilerplateCreateWithoutRepositoryInput
 }
 
 export interface BoilerplateUpdateInput {
@@ -438,9 +471,8 @@ export interface BoilerplateUpdateInput {
   repository?: RepositoryUpdateOneRequiredWithoutBoilerplatesInput
 }
 
-export interface BoilerplateUpdateWithWhereUniqueWithoutRepositoryInput {
-  where: BoilerplateWhereUniqueInput
-  data: BoilerplateUpdateWithoutRepositoryDataInput
+export interface InstallationUpdateManyMutationInput {
+  githubId?: String
 }
 
 export interface RepositoryUpdateOneRequiredWithoutBoilerplatesInput {
@@ -450,20 +482,21 @@ export interface RepositoryUpdateOneRequiredWithoutBoilerplatesInput {
   connect?: RepositoryWhereUniqueInput
 }
 
-export type RepositoryWhereUniqueInput = AtLeastOne<{
-  id: ID_Input
-  githubId?: String
-}>
-
-export interface InstallationUpdateInput {
-  githubId?: String
-  repositories?: RepositoryUpdateManyWithoutInstallationInput
+export interface BoilerplateUpsertWithWhereUniqueWithoutRepositoryInput {
+  where: BoilerplateWhereUniqueInput
+  update: BoilerplateUpdateWithoutRepositoryDataInput
+  create: BoilerplateCreateWithoutRepositoryInput
 }
 
 export interface RepositoryUpdateWithWhereUniqueWithoutInstallationInput {
   where: RepositoryWhereUniqueInput
   data: RepositoryUpdateWithoutInstallationDataInput
 }
+
+export type RepositoryWhereUniqueInput = AtLeastOne<{
+  id: ID_Input
+  githubId?: String
+}>
 
 export interface InstallationUpdateOneRequiredWithoutRepositoriesInput {
   create?: InstallationCreateWithoutRepositoriesInput
@@ -472,29 +505,34 @@ export interface InstallationUpdateOneRequiredWithoutRepositoriesInput {
   connect?: InstallationWhereUniqueInput
 }
 
-export interface RepositorySubscriptionWhereInput {
-  mutation_in?: MutationType[] | MutationType
-  updatedFields_contains?: String
-  updatedFields_contains_every?: String[] | String
-  updatedFields_contains_some?: String[] | String
-  node?: RepositoryWhereInput
-  AND?: RepositorySubscriptionWhereInput[] | RepositorySubscriptionWhereInput
-  OR?: RepositorySubscriptionWhereInput[] | RepositorySubscriptionWhereInput
-  NOT?: RepositorySubscriptionWhereInput[] | RepositorySubscriptionWhereInput
+export interface BoilerplateUpdateManyWithoutRepositoryInput {
+  create?:
+    | BoilerplateCreateWithoutRepositoryInput[]
+    | BoilerplateCreateWithoutRepositoryInput
+  delete?: BoilerplateWhereUniqueInput[] | BoilerplateWhereUniqueInput
+  connect?: BoilerplateWhereUniqueInput[] | BoilerplateWhereUniqueInput
+  disconnect?: BoilerplateWhereUniqueInput[] | BoilerplateWhereUniqueInput
+  update?:
+    | BoilerplateUpdateWithWhereUniqueWithoutRepositoryInput[]
+    | BoilerplateUpdateWithWhereUniqueWithoutRepositoryInput
+  upsert?:
+    | BoilerplateUpsertWithWhereUniqueWithoutRepositoryInput[]
+    | BoilerplateUpsertWithWhereUniqueWithoutRepositoryInput
 }
 
 export interface InstallationUpdateWithoutRepositoriesDataInput {
   githubId?: String
 }
 
-export interface RepositoryUpdateInput {
-  githubId?: String
-  name?: String
-  owner?: String
-  boilerplates?: BoilerplateUpdateManyWithoutRepositoryInput
-  githubIssue?: Int
-  githubPR?: Int
-  installation?: InstallationUpdateOneRequiredWithoutRepositoriesInput
+export interface BoilerplateSubscriptionWhereInput {
+  mutation_in?: MutationType[] | MutationType
+  updatedFields_contains?: String
+  updatedFields_contains_every?: String[] | String
+  updatedFields_contains_some?: String[] | String
+  node?: BoilerplateWhereInput
+  AND?: BoilerplateSubscriptionWhereInput[] | BoilerplateSubscriptionWhereInput
+  OR?: BoilerplateSubscriptionWhereInput[] | BoilerplateSubscriptionWhereInput
+  NOT?: BoilerplateSubscriptionWhereInput[] | BoilerplateSubscriptionWhereInput
 }
 
 export interface RepositoryWhereInput {
@@ -573,22 +611,6 @@ export interface RepositoryWhereInput {
   boilerplates_every?: BoilerplateWhereInput
   boilerplates_some?: BoilerplateWhereInput
   boilerplates_none?: BoilerplateWhereInput
-  githubIssue?: Int
-  githubIssue_not?: Int
-  githubIssue_in?: Int[] | Int
-  githubIssue_not_in?: Int[] | Int
-  githubIssue_lt?: Int
-  githubIssue_lte?: Int
-  githubIssue_gt?: Int
-  githubIssue_gte?: Int
-  githubPR?: Int
-  githubPR_not?: Int
-  githubPR_in?: Int[] | Int
-  githubPR_not_in?: Int[] | Int
-  githubPR_lt?: Int
-  githubPR_lte?: Int
-  githubPR_gt?: Int
-  githubPR_gte?: Int
   installation?: InstallationWhereInput
   AND?: RepositoryWhereInput[] | RepositoryWhereInput
   OR?: RepositoryWhereInput[] | RepositoryWhereInput
@@ -599,80 +621,6 @@ export type InstallationWhereUniqueInput = AtLeastOne<{
   id: ID_Input
   githubId?: String
 }>
-
-export interface InstallationWhereInput {
-  id?: ID_Input
-  id_not?: ID_Input
-  id_in?: ID_Input[] | ID_Input
-  id_not_in?: ID_Input[] | ID_Input
-  id_lt?: ID_Input
-  id_lte?: ID_Input
-  id_gt?: ID_Input
-  id_gte?: ID_Input
-  id_contains?: ID_Input
-  id_not_contains?: ID_Input
-  id_starts_with?: ID_Input
-  id_not_starts_with?: ID_Input
-  id_ends_with?: ID_Input
-  id_not_ends_with?: ID_Input
-  createdAt?: DateTimeInput
-  createdAt_not?: DateTimeInput
-  createdAt_in?: DateTimeInput[] | DateTimeInput
-  createdAt_not_in?: DateTimeInput[] | DateTimeInput
-  createdAt_lt?: DateTimeInput
-  createdAt_lte?: DateTimeInput
-  createdAt_gt?: DateTimeInput
-  createdAt_gte?: DateTimeInput
-  updatedAt?: DateTimeInput
-  updatedAt_not?: DateTimeInput
-  updatedAt_in?: DateTimeInput[] | DateTimeInput
-  updatedAt_not_in?: DateTimeInput[] | DateTimeInput
-  updatedAt_lt?: DateTimeInput
-  updatedAt_lte?: DateTimeInput
-  updatedAt_gt?: DateTimeInput
-  updatedAt_gte?: DateTimeInput
-  githubId?: String
-  githubId_not?: String
-  githubId_in?: String[] | String
-  githubId_not_in?: String[] | String
-  githubId_lt?: String
-  githubId_lte?: String
-  githubId_gt?: String
-  githubId_gte?: String
-  githubId_contains?: String
-  githubId_not_contains?: String
-  githubId_starts_with?: String
-  githubId_not_starts_with?: String
-  githubId_ends_with?: String
-  githubId_not_ends_with?: String
-  repositories_every?: RepositoryWhereInput
-  repositories_some?: RepositoryWhereInput
-  repositories_none?: RepositoryWhereInput
-  AND?: InstallationWhereInput[] | InstallationWhereInput
-  OR?: InstallationWhereInput[] | InstallationWhereInput
-  NOT?: InstallationWhereInput[] | InstallationWhereInput
-}
-
-export interface BoilerplateUpdateManyWithoutRepositoryInput {
-  create?:
-    | BoilerplateCreateWithoutRepositoryInput[]
-    | BoilerplateCreateWithoutRepositoryInput
-  delete?: BoilerplateWhereUniqueInput[] | BoilerplateWhereUniqueInput
-  connect?: BoilerplateWhereUniqueInput[] | BoilerplateWhereUniqueInput
-  disconnect?: BoilerplateWhereUniqueInput[] | BoilerplateWhereUniqueInput
-  update?:
-    | BoilerplateUpdateWithWhereUniqueWithoutRepositoryInput[]
-    | BoilerplateUpdateWithWhereUniqueWithoutRepositoryInput
-  upsert?:
-    | BoilerplateUpsertWithWhereUniqueWithoutRepositoryInput[]
-    | BoilerplateUpsertWithWhereUniqueWithoutRepositoryInput
-}
-
-export interface BoilerplateUpdateManyMutationInput {
-  name?: String
-  description?: String
-  path?: String
-}
 
 export interface RepositoryUpdateManyWithoutInstallationInput {
   create?:
@@ -687,6 +635,24 @@ export interface RepositoryUpdateManyWithoutInstallationInput {
   upsert?:
     | RepositoryUpsertWithWhereUniqueWithoutInstallationInput[]
     | RepositoryUpsertWithWhereUniqueWithoutInstallationInput
+}
+
+export interface BoilerplateUpdateWithoutRepositoryDataInput {
+  name?: String
+  description?: String
+  path?: String
+}
+
+export interface InstallationUpdateInput {
+  githubId?: String
+  repositories?: RepositoryUpdateManyWithoutInstallationInput
+}
+
+export interface RepositoryUpdateWithoutInstallationDataInput {
+  githubId?: String
+  name?: String
+  owner?: String
+  boilerplates?: BoilerplateUpdateManyWithoutRepositoryInput
 }
 
 export interface RepositoryCreateManyWithoutInstallationInput {
@@ -714,34 +680,34 @@ export interface BoilerplateCreateWithoutRepositoryInput {
   path: String
 }
 
-export interface BoilerplateSubscriptionWhereInput {
+export interface RepositorySubscriptionWhereInput {
   mutation_in?: MutationType[] | MutationType
   updatedFields_contains?: String
   updatedFields_contains_every?: String[] | String
   updatedFields_contains_some?: String[] | String
-  node?: BoilerplateWhereInput
-  AND?: BoilerplateSubscriptionWhereInput[] | BoilerplateSubscriptionWhereInput
-  OR?: BoilerplateSubscriptionWhereInput[] | BoilerplateSubscriptionWhereInput
-  NOT?: BoilerplateSubscriptionWhereInput[] | BoilerplateSubscriptionWhereInput
+  node?: RepositoryWhereInput
+  AND?: RepositorySubscriptionWhereInput[] | RepositorySubscriptionWhereInput
+  OR?: RepositorySubscriptionWhereInput[] | RepositorySubscriptionWhereInput
+  NOT?: RepositorySubscriptionWhereInput[] | RepositorySubscriptionWhereInput
 }
 
-export interface RepositoryUpdateWithoutInstallationDataInput {
+export interface BoilerplateUpdateWithWhereUniqueWithoutRepositoryInput {
+  where: BoilerplateWhereUniqueInput
+  data: BoilerplateUpdateWithoutRepositoryDataInput
+}
+
+export interface RepositoryUpsertWithWhereUniqueWithoutInstallationInput {
+  where: RepositoryWhereUniqueInput
+  update: RepositoryUpdateWithoutInstallationDataInput
+  create: RepositoryCreateWithoutInstallationInput
+}
+
+export interface RepositoryUpdateInput {
   githubId?: String
   name?: String
   owner?: String
   boilerplates?: BoilerplateUpdateManyWithoutRepositoryInput
-  githubIssue?: Int
-  githubPR?: Int
-}
-
-export interface BoilerplateUpdateWithoutRepositoryDataInput {
-  name?: String
-  description?: String
-  path?: String
-}
-
-export interface InstallationUpdateManyMutationInput {
-  githubId?: String
+  installation?: InstallationUpdateOneRequiredWithoutRepositoriesInput
 }
 
 export interface NodeNode {
@@ -755,8 +721,6 @@ export interface RepositoryPreviousValues {
   githubId: String
   name: String
   owner: String
-  githubIssue: Int
-  githubPR: Int
 }
 
 export interface RepositoryPreviousValuesPromise
@@ -768,8 +732,6 @@ export interface RepositoryPreviousValuesPromise
   githubId: () => Promise<String>
   name: () => Promise<String>
   owner: () => Promise<String>
-  githubIssue: () => Promise<Int>
-  githubPR: () => Promise<Int>
 }
 
 export interface RepositoryPreviousValuesSubscription
@@ -781,122 +743,24 @@ export interface RepositoryPreviousValuesSubscription
   githubId: () => Promise<AsyncIterator<String>>
   name: () => Promise<AsyncIterator<String>>
   owner: () => Promise<AsyncIterator<String>>
-  githubIssue: () => Promise<AsyncIterator<Int>>
-  githubPR: () => Promise<AsyncIterator<Int>>
 }
 
-export interface BoilerplateEdge {
-  cursor: String
-}
+export interface InstallationConnection {}
 
-export interface BoilerplateEdgePromise
-  extends Promise<BoilerplateEdge>,
-    Fragmentable {
-  node: <T = Boilerplate>() => T
-  cursor: () => Promise<String>
-}
-
-export interface BoilerplateEdgeSubscription
-  extends Promise<AsyncIterator<BoilerplateEdge>>,
-    Fragmentable {
-  node: <T = BoilerplateSubscription>() => T
-  cursor: () => Promise<AsyncIterator<String>>
-}
-
-export interface InstallationSubscriptionPayload {
-  mutation: MutationType
-  updatedFields?: String[]
-}
-
-export interface InstallationSubscriptionPayloadPromise
-  extends Promise<InstallationSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>
-  node: <T = Installation>() => T
-  updatedFields: () => Promise<String[]>
-  previousValues: <T = InstallationPreviousValues>() => T
-}
-
-export interface InstallationSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<InstallationSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>
-  node: <T = InstallationSubscription>() => T
-  updatedFields: () => Promise<AsyncIterator<String[]>>
-  previousValues: <T = InstallationPreviousValuesSubscription>() => T
-}
-
-export interface BatchPayload {
-  count: Long
-}
-
-export interface BatchPayloadPromise
-  extends Promise<BatchPayload>,
-    Fragmentable {
-  count: () => Promise<Long>
-}
-
-export interface BatchPayloadSubscription
-  extends Promise<AsyncIterator<BatchPayload>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Long>>
-}
-
-export interface AggregateRepository {
-  count: Int
-}
-
-export interface AggregateRepositoryPromise
-  extends Promise<AggregateRepository>,
-    Fragmentable {
-  count: () => Promise<Int>
-}
-
-export interface AggregateRepositorySubscription
-  extends Promise<AsyncIterator<AggregateRepository>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>
-}
-
-export interface PageInfo {
-  hasNextPage: Boolean
-  hasPreviousPage: Boolean
-  startCursor?: String
-  endCursor?: String
-}
-
-export interface PageInfoPromise extends Promise<PageInfo>, Fragmentable {
-  hasNextPage: () => Promise<Boolean>
-  hasPreviousPage: () => Promise<Boolean>
-  startCursor: () => Promise<String>
-  endCursor: () => Promise<String>
-}
-
-export interface PageInfoSubscription
-  extends Promise<AsyncIterator<PageInfo>>,
-    Fragmentable {
-  hasNextPage: () => Promise<AsyncIterator<Boolean>>
-  hasPreviousPage: () => Promise<AsyncIterator<Boolean>>
-  startCursor: () => Promise<AsyncIterator<String>>
-  endCursor: () => Promise<AsyncIterator<String>>
-}
-
-export interface RepositoryConnection {}
-
-export interface RepositoryConnectionPromise
-  extends Promise<RepositoryConnection>,
+export interface InstallationConnectionPromise
+  extends Promise<InstallationConnection>,
     Fragmentable {
   pageInfo: <T = PageInfo>() => T
-  edges: <T = FragmentableArray<RepositoryEdge>>() => T
-  aggregate: <T = AggregateRepository>() => T
+  edges: <T = FragmentableArray<InstallationEdge>>() => T
+  aggregate: <T = AggregateInstallation>() => T
 }
 
-export interface RepositoryConnectionSubscription
-  extends Promise<AsyncIterator<RepositoryConnection>>,
+export interface InstallationConnectionSubscription
+  extends Promise<AsyncIterator<InstallationConnection>>,
     Fragmentable {
   pageInfo: <T = PageInfoSubscription>() => T
-  edges: <T = Promise<AsyncIterator<RepositoryEdgeSubscription>>>() => T
-  aggregate: <T = AggregateRepositorySubscription>() => T
+  edges: <T = Promise<AsyncIterator<InstallationEdgeSubscription>>>() => T
+  aggregate: <T = AggregateInstallationSubscription>() => T
 }
 
 export interface BoilerplateConnection {}
@@ -915,83 +779,6 @@ export interface BoilerplateConnectionSubscription
   pageInfo: <T = PageInfoSubscription>() => T
   edges: <T = Promise<AsyncIterator<BoilerplateEdgeSubscription>>>() => T
   aggregate: <T = AggregateBoilerplateSubscription>() => T
-}
-
-export interface InstallationEdge {
-  cursor: String
-}
-
-export interface InstallationEdgePromise
-  extends Promise<InstallationEdge>,
-    Fragmentable {
-  node: <T = Installation>() => T
-  cursor: () => Promise<String>
-}
-
-export interface InstallationEdgeSubscription
-  extends Promise<AsyncIterator<InstallationEdge>>,
-    Fragmentable {
-  node: <T = InstallationSubscription>() => T
-  cursor: () => Promise<AsyncIterator<String>>
-}
-
-export interface Repository {
-  id: ID_Output
-  createdAt: DateTimeOutput
-  updatedAt: DateTimeOutput
-  githubId: String
-  name: String
-  owner: String
-  githubIssue: Int
-  githubPR: Int
-}
-
-export interface RepositoryPromise extends Promise<Repository>, Fragmentable {
-  id: () => Promise<ID_Output>
-  createdAt: () => Promise<DateTimeOutput>
-  updatedAt: () => Promise<DateTimeOutput>
-  githubId: () => Promise<String>
-  name: () => Promise<String>
-  owner: () => Promise<String>
-  boilerplates: <T = FragmentableArray<Boilerplate>>(
-    args?: {
-      where?: BoilerplateWhereInput
-      orderBy?: BoilerplateOrderByInput
-      skip?: Int
-      after?: String
-      before?: String
-      first?: Int
-      last?: Int
-    },
-  ) => T
-  githubIssue: () => Promise<Int>
-  githubPR: () => Promise<Int>
-  installation: <T = Installation>() => T
-}
-
-export interface RepositorySubscription
-  extends Promise<AsyncIterator<Repository>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>
-  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>
-  githubId: () => Promise<AsyncIterator<String>>
-  name: () => Promise<AsyncIterator<String>>
-  owner: () => Promise<AsyncIterator<String>>
-  boilerplates: <T = Promise<AsyncIterator<BoilerplateSubscription>>>(
-    args?: {
-      where?: BoilerplateWhereInput
-      orderBy?: BoilerplateOrderByInput
-      skip?: Int
-      after?: String
-      before?: String
-      first?: Int
-      last?: Int
-    },
-  ) => T
-  githubIssue: () => Promise<AsyncIterator<Int>>
-  githubPR: () => Promise<AsyncIterator<Int>>
-  installation: <T = InstallationSubscription>() => T
 }
 
 export interface Boilerplate {
@@ -1025,51 +812,184 @@ export interface BoilerplateSubscription
   repository: <T = RepositorySubscription>() => T
 }
 
-export interface Installation {
+export interface AggregateBoilerplate {
+  count: Int
+}
+
+export interface AggregateBoilerplatePromise
+  extends Promise<AggregateBoilerplate>,
+    Fragmentable {
+  count: () => Promise<Int>
+}
+
+export interface AggregateBoilerplateSubscription
+  extends Promise<AsyncIterator<AggregateBoilerplate>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>
+}
+
+export interface BatchPayload {
+  count: Long
+}
+
+export interface BatchPayloadPromise
+  extends Promise<BatchPayload>,
+    Fragmentable {
+  count: () => Promise<Long>
+}
+
+export interface BatchPayloadSubscription
+  extends Promise<AsyncIterator<BatchPayload>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Long>>
+}
+
+export interface Repository {
+  id: ID_Output
+  createdAt: DateTimeOutput
+  updatedAt: DateTimeOutput
+  githubId: String
+  name: String
+  owner: String
+}
+
+export interface RepositoryPromise extends Promise<Repository>, Fragmentable {
+  id: () => Promise<ID_Output>
+  createdAt: () => Promise<DateTimeOutput>
+  updatedAt: () => Promise<DateTimeOutput>
+  githubId: () => Promise<String>
+  name: () => Promise<String>
+  owner: () => Promise<String>
+  boilerplates: <T = FragmentableArray<Boilerplate>>(
+    args?: {
+      where?: BoilerplateWhereInput
+      orderBy?: BoilerplateOrderByInput
+      skip?: Int
+      after?: String
+      before?: String
+      first?: Int
+      last?: Int
+    },
+  ) => T
+  installation: <T = Installation>() => T
+}
+
+export interface RepositorySubscription
+  extends Promise<AsyncIterator<Repository>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>
+  githubId: () => Promise<AsyncIterator<String>>
+  name: () => Promise<AsyncIterator<String>>
+  owner: () => Promise<AsyncIterator<String>>
+  boilerplates: <T = Promise<AsyncIterator<BoilerplateSubscription>>>(
+    args?: {
+      where?: BoilerplateWhereInput
+      orderBy?: BoilerplateOrderByInput
+      skip?: Int
+      after?: String
+      before?: String
+      first?: Int
+      last?: Int
+    },
+  ) => T
+  installation: <T = InstallationSubscription>() => T
+}
+
+export interface BoilerplateEdge {
+  cursor: String
+}
+
+export interface BoilerplateEdgePromise
+  extends Promise<BoilerplateEdge>,
+    Fragmentable {
+  node: <T = Boilerplate>() => T
+  cursor: () => Promise<String>
+}
+
+export interface BoilerplateEdgeSubscription
+  extends Promise<AsyncIterator<BoilerplateEdge>>,
+    Fragmentable {
+  node: <T = BoilerplateSubscription>() => T
+  cursor: () => Promise<AsyncIterator<String>>
+}
+
+export interface AggregateRepository {
+  count: Int
+}
+
+export interface AggregateRepositoryPromise
+  extends Promise<AggregateRepository>,
+    Fragmentable {
+  count: () => Promise<Int>
+}
+
+export interface AggregateRepositorySubscription
+  extends Promise<AsyncIterator<AggregateRepository>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>
+}
+
+export interface InstallationPreviousValues {
   id: ID_Output
   createdAt: DateTimeOutput
   updatedAt: DateTimeOutput
   githubId: String
 }
 
-export interface InstallationPromise
-  extends Promise<Installation>,
+export interface InstallationPreviousValuesPromise
+  extends Promise<InstallationPreviousValues>,
     Fragmentable {
   id: () => Promise<ID_Output>
   createdAt: () => Promise<DateTimeOutput>
   updatedAt: () => Promise<DateTimeOutput>
   githubId: () => Promise<String>
-  repositories: <T = FragmentableArray<Repository>>(
-    args?: {
-      where?: RepositoryWhereInput
-      orderBy?: RepositoryOrderByInput
-      skip?: Int
-      after?: String
-      before?: String
-      first?: Int
-      last?: Int
-    },
-  ) => T
 }
 
-export interface InstallationSubscription
-  extends Promise<AsyncIterator<Installation>>,
+export interface InstallationPreviousValuesSubscription
+  extends Promise<AsyncIterator<InstallationPreviousValues>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>
   githubId: () => Promise<AsyncIterator<String>>
-  repositories: <T = Promise<AsyncIterator<RepositorySubscription>>>(
-    args?: {
-      where?: RepositoryWhereInput
-      orderBy?: RepositoryOrderByInput
-      skip?: Int
-      after?: String
-      before?: String
-      first?: Int
-      last?: Int
-    },
-  ) => T
+}
+
+export interface RepositoryConnection {}
+
+export interface RepositoryConnectionPromise
+  extends Promise<RepositoryConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfo>() => T
+  edges: <T = FragmentableArray<RepositoryEdge>>() => T
+  aggregate: <T = AggregateRepository>() => T
+}
+
+export interface RepositoryConnectionSubscription
+  extends Promise<AsyncIterator<RepositoryConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T
+  edges: <T = Promise<AsyncIterator<RepositoryEdgeSubscription>>>() => T
+  aggregate: <T = AggregateRepositorySubscription>() => T
+}
+
+export interface InstallationEdge {
+  cursor: String
+}
+
+export interface InstallationEdgePromise
+  extends Promise<InstallationEdge>,
+    Fragmentable {
+  node: <T = Installation>() => T
+  cursor: () => Promise<String>
+}
+
+export interface InstallationEdgeSubscription
+  extends Promise<AsyncIterator<InstallationEdge>>,
+    Fragmentable {
+  node: <T = InstallationSubscription>() => T
+  cursor: () => Promise<AsyncIterator<String>>
 }
 
 export interface BoilerplatePreviousValues {
@@ -1126,63 +1046,97 @@ export interface BoilerplateSubscriptionPayloadSubscription
   previousValues: <T = BoilerplatePreviousValuesSubscription>() => T
 }
 
-export interface InstallationPreviousValues {
+export interface InstallationSubscriptionPayload {
+  mutation: MutationType
+  updatedFields?: String[]
+}
+
+export interface InstallationSubscriptionPayloadPromise
+  extends Promise<InstallationSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>
+  node: <T = Installation>() => T
+  updatedFields: () => Promise<String[]>
+  previousValues: <T = InstallationPreviousValues>() => T
+}
+
+export interface InstallationSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<InstallationSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>
+  node: <T = InstallationSubscription>() => T
+  updatedFields: () => Promise<AsyncIterator<String[]>>
+  previousValues: <T = InstallationPreviousValuesSubscription>() => T
+}
+
+export interface PageInfo {
+  hasNextPage: Boolean
+  hasPreviousPage: Boolean
+  startCursor?: String
+  endCursor?: String
+}
+
+export interface PageInfoPromise extends Promise<PageInfo>, Fragmentable {
+  hasNextPage: () => Promise<Boolean>
+  hasPreviousPage: () => Promise<Boolean>
+  startCursor: () => Promise<String>
+  endCursor: () => Promise<String>
+}
+
+export interface PageInfoSubscription
+  extends Promise<AsyncIterator<PageInfo>>,
+    Fragmentable {
+  hasNextPage: () => Promise<AsyncIterator<Boolean>>
+  hasPreviousPage: () => Promise<AsyncIterator<Boolean>>
+  startCursor: () => Promise<AsyncIterator<String>>
+  endCursor: () => Promise<AsyncIterator<String>>
+}
+
+export interface Installation {
   id: ID_Output
   createdAt: DateTimeOutput
   updatedAt: DateTimeOutput
   githubId: String
 }
 
-export interface InstallationPreviousValuesPromise
-  extends Promise<InstallationPreviousValues>,
+export interface InstallationPromise
+  extends Promise<Installation>,
     Fragmentable {
   id: () => Promise<ID_Output>
   createdAt: () => Promise<DateTimeOutput>
   updatedAt: () => Promise<DateTimeOutput>
   githubId: () => Promise<String>
+  repositories: <T = FragmentableArray<Repository>>(
+    args?: {
+      where?: RepositoryWhereInput
+      orderBy?: RepositoryOrderByInput
+      skip?: Int
+      after?: String
+      before?: String
+      first?: Int
+      last?: Int
+    },
+  ) => T
 }
 
-export interface InstallationPreviousValuesSubscription
-  extends Promise<AsyncIterator<InstallationPreviousValues>>,
+export interface InstallationSubscription
+  extends Promise<AsyncIterator<Installation>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>
   githubId: () => Promise<AsyncIterator<String>>
-}
-
-export interface AggregateBoilerplate {
-  count: Int
-}
-
-export interface AggregateBoilerplatePromise
-  extends Promise<AggregateBoilerplate>,
-    Fragmentable {
-  count: () => Promise<Int>
-}
-
-export interface AggregateBoilerplateSubscription
-  extends Promise<AsyncIterator<AggregateBoilerplate>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>
-}
-
-export interface InstallationConnection {}
-
-export interface InstallationConnectionPromise
-  extends Promise<InstallationConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfo>() => T
-  edges: <T = FragmentableArray<InstallationEdge>>() => T
-  aggregate: <T = AggregateInstallation>() => T
-}
-
-export interface InstallationConnectionSubscription
-  extends Promise<AsyncIterator<InstallationConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T
-  edges: <T = Promise<AsyncIterator<InstallationEdgeSubscription>>>() => T
-  aggregate: <T = AggregateInstallationSubscription>() => T
+  repositories: <T = Promise<AsyncIterator<RepositorySubscription>>>(
+    args?: {
+      where?: RepositoryWhereInput
+      orderBy?: RepositoryOrderByInput
+      skip?: Int
+      after?: String
+      before?: String
+      first?: Int
+      last?: Int
+    },
+  ) => T
 }
 
 export interface AggregateInstallation {
@@ -1243,11 +1197,6 @@ export interface RepositorySubscriptionPayloadSubscription
 }
 
 /*
-The `Boolean` scalar type represents `true` or `false`.
-*/
-export type Boolean = boolean
-
-/*
 The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. 
 */
 export type Int = number
@@ -1269,6 +1218,11 @@ export type DateTimeInput = Date | string
 DateTime scalar output type, which is always a string
 */
 export type DateTimeOutput = string
+
+/*
+The `Boolean` scalar type represents `true` or `false`.
+*/
+export type Boolean = boolean
 
 /*
 The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
