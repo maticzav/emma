@@ -7,12 +7,12 @@ import {
   mergeConfigurations,
   createProjectSetupBranch,
   createSetupPullRequest,
-  setupPullRequestTemplate,
   getBoilerplateDefinitionForPath,
   getBoilerplatePathsFromConfiguration,
   hydratePartialRepository,
 } from '../../github'
 import * as utils from '../../utils'
+import * as config from '../../config'
 
 import * as fixtures from '../fixtures/unit/github'
 
@@ -308,8 +308,7 @@ describe('Github functions work accordingly', () => {
 
     // Test
 
-    const analysis = 'analysis'
-    await createSetupPullRequest(git, fixtures.repo, analysis)
+    await createSetupPullRequest(git, fixtures.repo)
 
     expect(github.pullRequests.create).toHaveBeenCalledWith({
       owner: fixtures.repo.owner,
@@ -317,7 +316,7 @@ describe('Github functions work accordingly', () => {
       title: `Hey, it's Emma Boilerplates 👋`,
       head: 'emma/setup',
       base: 'master',
-      body: setupPullRequestTemplate(analysis),
+      body: config.setupPullRequestTemplate,
     })
   })
 

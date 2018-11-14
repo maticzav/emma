@@ -1,0 +1,43 @@
+type Boilerplate {
+  id: ID! @unique
+  createdAt: DateTime!
+  updatedAt: DateTime!
+
+  name: String! @unique
+  description: String!
+
+  path: String!
+
+  repository: Repository!
+    @relation(name: "RepositoryBoilerplate", onDelete: SET_NULL)
+}
+
+type Repository {
+  id: ID! @unique
+  createdAt: DateTime!
+  updatedAt: DateTime!
+
+  githubId: String! @unique
+  name: String!
+  owner: String!
+
+  boilerplates: [Boilerplate!]!
+    @relation(name: "RepositoryBoilerplate", onDelete: CASCADE)
+
+  githubIssue: Int!
+  githubPR: Int!
+
+  installation: Installation!
+    @relation(name: "InstallationRepository", onDelete: SET_NULL)
+}
+
+type Installation {
+  id: ID! @unique
+  createdAt: DateTime!
+  updatedAt: DateTime!
+
+  githubId: String! @unique
+
+  repositories: [Repository!]!
+    @relation(name: "InstallationRepository", onDelete: CASCADE)
+}
