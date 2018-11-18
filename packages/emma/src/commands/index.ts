@@ -1,2 +1,2 @@
-export { DependencyManager } from './dependencyManager'
-export { BoilerplateInstaller } from './boilerplateInstaller'
+export { dependencyManager } from './dependencyManager'
+export { boilerplateInstaller } from './boilerplateInstaller'

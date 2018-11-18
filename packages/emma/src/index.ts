@@ -2,6 +2,7 @@
 
 import * as meow from 'meow'
 import * as notifier from 'update-notifier'
+import * as readPkg from 'read-pkg'
 import { render } from 'ink'
 
 import * as commands from './commands'
@@ -47,14 +48,47 @@ async function main(
   cli: meow.Result,
   update: notifier.UpdateNotifier,
 ): Promise<void> {
-  const isModule = 0
-
-  render(commands.DependencyManager)
+  let unmount: () => any = () => null
 
   /**
-   * Helper function
+   * Require immediate update of Emma.
    */
-  function getPackageJSONDefinition() {
-    return
+  if (update.update) {
+    update.notify()
+    process.exit()
+  }
+
+  /**
+   * Exception handlers
+   */
+  const onError = () => {
+    unmount()
+    process.exit(1)
+  }
+
+  const onExit = () => {
+    unmount()
+    process.exit()
+  }
+
+  /**
+   *
+   * Get package definition. If there exists package definition
+   * start dependency manager, otherwise start boilerplate installer.
+   *
+   */
+  try {
+    const pkg = await readPkg()
+
+    /**
+     * Renders dependency manager.
+     */
+    unmount = render(commands.dependencyManager(pkg, onExit))
+  } catch (err) {
+    /**
+     * Renders boilerplate installer.
+     *  (reruns main after boilerplate installation to start dependency manager.)
+     */
+    unmount = render(commands.boilerplateInstaller(() => main(cli, update)))
   }
 }

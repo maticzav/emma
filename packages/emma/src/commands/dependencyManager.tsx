@@ -1,6 +1,8 @@
-import { Component } from 'react'
+import * as React from 'react'
+import { Package } from 'read-pkg'
+import { Input } from '../components/Input'
 
-export interface IDependency {
+interface IDependency {
   name: string
   version: string
   type: 'normal' | 'development' | 'peer'
@@ -12,22 +14,72 @@ export interface IDependency {
  *
  */
 
-interface Props {}
-
-interface State {
-  dependencies: IDependency[]
+interface Props {
+  pkg: Package
+  onComplete: () => void
 }
 
-export class DependencyManager extends Component<Props, State> {
+interface State {
+  input: string
+  dependencies: Map<string, IDependency>
+}
+
+class DependencyManager extends React.Component<Props, State> {
   state: State = {
-    dependencies: [],
+    input: '',
+    dependencies: new Map(),
   }
 
   constructor(props) {
     super(props)
   }
 
-  render() {
-    return 'fo'
+  handleInputChange = input => {
+    this.setState({
+      input,
+    })
   }
+
+  handleInputSubmit = () => {
+    console.log('foo')
+  }
+
+  render() {
+    return (
+      <div>
+        <div>
+          <Input
+            value={this.state.input}
+            focus={true}
+            onChange={this.handleInputChange}
+            onSubmit={this.handleInputSubmit}
+          />
+        </div>
+        <div>"Dependency manager"</div>
+        <div>Powered by Algolia.</div>
+      </div>
+    )
+  }
+}
+
+/**
+ *
+ * Dependency manager function.
+ *
+ * @param pkg
+ */
+export function dependencyManager(pkg: Package, onComplete?: () => void) {
+  return <DependencyManager pkg={pkg} onComplete={onComplete} />
+}
+
+/**
+ *
+ * Helper functions
+ *
+ */
+
+export function normalisePackageDependencies(dependencies: {
+  [key: string]: string
+}): IDependency[] {
+  return []
 }

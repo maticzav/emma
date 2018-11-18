@@ -1,4 +1,4 @@
-import { Component } from 'react'
+import * as React from 'react'
 
 export interface IBoilerplate {
   name: string
@@ -11,4 +11,14 @@ export interface IBoilerplate {
  * Main component definition.
  *
  */
-export class BoilerplateInstaller extends Component {}
+interface BoilerplateInstallerProps {
+  onComplete: (boilerplate: IBoilerplate) => void
+}
+
+class BoilerplateInstaller extends React.Component<BoilerplateInstallerProps> {}
+
+export function boilerplateInstaller(
+  onComplete?: (boilerplate: IBoilerplate) => void,
+) {
+  return <BoilerplateInstaller onComplete={onComplete} />
+}
