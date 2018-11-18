@@ -2,7 +2,7 @@
 
 import * as meow from 'meow'
 import * as notifier from 'update-notifier'
-import render from 'react-cli-renderer'
+import { render } from 'ink'
 
 import * as commands from './commands'
 
@@ -15,9 +15,20 @@ import * as commands from './commands'
  */
 const cli = meow(
   `
+  Usage:
+    $ emma
 
+  It's that simple! Simply delightful.
 `,
-  {},
+  {
+    flags: {
+      force: {
+        alias: 'f',
+        type: 'boolean',
+        default: false,
+      },
+    },
+  },
 )
 
 // Checks for updates of tool.

@@ -1,13 +1,13 @@
-import React, { Component } from 'react'
-import { Section } from 'react-cli-renderer'
+import * as React from 'react'
+import { Color } from 'ink'
 import hasAnsi = require('has-ansi')
 
 interface Props {
   value: string
   focus: boolean
   placeholder?: string
-  onChange: (input: string) => void
-  onSubmit: (input: string) => void
+  onChange: (input: string) => any
+  onSubmit: (input: string) => any
 }
 
 /**
@@ -15,7 +15,7 @@ interface Props {
  * Input component
  *
  */
-export class Input extends Component<Props> {
+export class Input extends React.Component<Props> {
   /**
    *
    * Event subscriptions.
@@ -71,6 +71,10 @@ export class Input extends Component<Props> {
     const { value, placeholder } = this.props
     const hasValue = value.length > 0
 
-    return <Section dim={!hasValue}>{hasValue ? value : placeholder}</Section>
+    return (
+      <Color hex={hasValue ? '#00' : '#f0'}>
+        {hasValue ? value : placeholder}
+      </Color>
+    )
   }
 }

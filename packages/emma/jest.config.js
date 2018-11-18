@@ -12,7 +12,6 @@ module.exports = {
     '**/*.{ts,tsx}',
     '!**/node_modules/**',
     '!**/vendor/**',
-    '!**/generated/**',
   ],
   coverageDirectory: './coverage',
   coverageReporters: ['json', 'lcov', 'text', 'clover', 'html'],
