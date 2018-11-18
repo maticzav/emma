@@ -1819,7 +1819,7 @@
   resolved "https://registry.yarnpkg.com/@types/prettier/-/prettier-1.13.2.tgz#ffe96278e712a8d4e467e367a338b05e22872646"
   integrity sha512-k6MCN8WuDiCj6O+UJsVMbrreZxkbrhQbO02oDj6yuRu8UAkp0MDdEcDKif8/gBKuJbT84kkO+VHQAqXkumEklg==
 
-"@types/prop-types@*", "@types/prop-types@^15.5.6":
+"@types/prop-types@*", "@types/prop-types@15.5.6":
   version "15.5.6"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.5.6.tgz#9c03d3fed70a8d517c191b7734da2879b50ca26c"
   integrity sha512-ZBFR7TROLVzCkswA3Fmqq+IIJt62/T7aY/Dmz+QkU7CaW2QFqAitCE8Ups7IzmGhcN1YWMBT4Qcoc07jU9hOJQ==
@@ -1853,7 +1853,7 @@
     "@types/prop-types" "*"
     csstype "^2.2.0"
 
-"@types/read-pkg@^3.0.0":
+"@types/read-pkg@3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@types/read-pkg/-/read-pkg-3.0.0.tgz#17ab6f0b396a58a5567ee387f558f2caedc8ae53"
   integrity sha512-oU5aK3cmIcJ4+r+MaXMJ53RHdri8c2XbwI2Tjn1hpxCh48XIqHdJT6opwVd1ZF2FcucXQMv6sh/TtOm00DMZIQ==
@@ -13148,7 +13148,7 @@ pkg-fetch@2.5.6:
     semver "5.5.0"
     unique-temp-dir "1.0.0"
 
-pkg@^4.3.4:
+pkg@4.3.4:
   version "4.3.4"
   resolved "https://registry.yarnpkg.com/pkg/-/pkg-4.3.4.tgz#194011aee0af067e4e2b853608e7f9e06fe0c189"
   integrity sha512-/vHksmZRu68BCZi+gX4ghCMKVPMXkoo6E16HbI0jAR1/wDMrRFGCXFIho2BQLTiFwtx80KH9FpZixEs/gYxfwA==
