@@ -55,16 +55,16 @@ declare module 'ink' {
    */
   interface ColorProps {
     hex?: string
-    hsl?: string[]
-    hsv?: string[]
-    hwb?: string[]
-    rgb?: string[]
+    hsl?: number[]
+    hsv?: number[]
+    hwb?: number[]
+    rgb?: number[]
     keyword?: string
     bgHex?: string
-    bgHsl?: string[]
-    bgHsv?: string[]
-    bgHwb?: string[]
-    bgRgb?: string[]
+    bgHsl?: number[]
+    bgHsv?: number[]
+    bgHwb?: number[]
+    bgRgb?: number[]
     bgKeyword?: string
   }
   export class Color extends React.Component<ColorProps> {}

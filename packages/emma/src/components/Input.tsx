@@ -1,13 +1,14 @@
 import * as React from 'react'
+import * as PropTypes from 'prop-types'
 import { Color } from 'ink'
 import hasAnsi = require('has-ansi')
 
 interface Props {
   value: string
-  focus: boolean
+  focus?: boolean
   placeholder?: string
-  onChange: (input: string) => any
-  onSubmit: (input: string) => any
+  onChange?: (input: string) => any
+  onSubmit?: (input: string) => any
 }
 
 /**
@@ -16,6 +17,25 @@ interface Props {
  *
  */
 export class Input extends React.Component<Props> {
+  static propTypes = {
+    value: PropTypes.string.isRequired,
+    focus: PropTypes.bool,
+    placeholder: PropTypes.string,
+    onChange: PropTypes.func,
+    onSubmit: PropTypes.func,
+  }
+
+  static defaultProps = {
+    placeholder: '',
+    focus: true,
+  }
+
+  constructor(props) {
+    super(props)
+
+    this.handleKeyPress = this.handleKeyPress.bind(this)
+  }
+
   /**
    *
    * Event subscriptions.
@@ -72,7 +92,7 @@ export class Input extends React.Component<Props> {
     const hasValue = value.length > 0
 
     return (
-      <Color hex={hasValue ? '#00' : '#f0'}>
+      <Color hex={hasValue ? '#ffffff' : '#757B82'}>
         {hasValue ? value : placeholder}
       </Color>
     )
