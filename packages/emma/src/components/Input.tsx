@@ -1,62 +1,81 @@
+/**
+ *
+ * Taken from vadimdemedes/ink-text-input.
+ *
+ */
 import * as React from 'react'
 import * as PropTypes from 'prop-types'
-import { Color } from 'ink'
+import { ReadStream } from 'fs'
+import { Color, StdinContext } from 'ink'
 import hasAnsi = require('has-ansi')
-
-interface Props {
-  value: string
-  focus?: boolean
-  placeholder?: string
-  onChange?: (input: string) => any
-  onSubmit?: (input: string) => any
-}
 
 /**
  *
- * Input component
+ * Inner component, listener
  *
  */
-export class Input extends React.Component<Props> {
+
+interface TextInputProps {
+  value: string
+  placeholder?: string
+  focus?: boolean
+  stdin: ReadStream
+  setRawMode: (raw: boolean) => void
+  onChange: (input: string) => void
+  onSubmit?: (input: string) => void
+}
+
+class TextInput extends React.PureComponent<TextInputProps> {
   static propTypes = {
     value: PropTypes.string.isRequired,
-    focus: PropTypes.bool,
     placeholder: PropTypes.string,
-    onChange: PropTypes.func,
+    focus: PropTypes.bool,
+    stdin: PropTypes.object.isRequired,
+    setRawMode: PropTypes.func.isRequired,
+    onChange: PropTypes.func.isRequired,
     onSubmit: PropTypes.func,
   }
 
   static defaultProps = {
     placeholder: '',
     focus: true,
+    onSubmit: () => ({}),
   }
 
-  constructor(props) {
-    super(props)
+  render() {
+    const { value, placeholder } = this.props
+    const hasValue = value.length > 0
 
-    this.handleKeyPress = this.handleKeyPress.bind(this)
+    return <Color dim={!hasValue}>{hasValue ? value : placeholder}</Color>
   }
 
   /**
    *
-   * Event subscriptions.
+   * Event handlers
    *
    */
+
   componentDidMount() {
-    process.stdin.on('keypress', this.handleKeyPress)
+    const { stdin, setRawMode } = this.props
+
+    setRawMode(true)
+    stdin.on('keypress', this.handleKeyPress)
   }
 
   componentWillUnmount() {
-    process.stdin.removeListener('keypress', this.handleKeyPress)
+    const { stdin, setRawMode } = this.props
+
+    stdin.removeListener('keypress', this.handleKeyPress)
+    setRawMode(false)
   }
 
   /**
    *
-   * Handles key press event.
+   * Input handler
    *
-   * @param ch
-   * @param key
    */
-  handleKeyPress(ch, key) {
+  handleKeyPress = (ch, key) => {
+    console.log('pressed')
     if (!this.props.focus) {
       return
     }
@@ -81,20 +100,24 @@ export class Input extends React.Component<Props> {
       onChange(value + ch)
     }
   }
+}
 
-  /**
-   *
-   * Rendering function.
-   *
-   */
+interface InputProps {
+  value: string
+  placeholder?: string
+  focus?: boolean
+  onChange: (input: string) => void
+  onSubmit?: (input: string) => void
+}
+
+export class Input extends React.PureComponent<InputProps> {
   render() {
-    const { value, placeholder } = this.props
-    const hasValue = value.length > 0
-
     return (
-      <Color hex={hasValue ? '#ffffff' : '#757B82'}>
-        {hasValue ? value : placeholder}
-      </Color>
+      <StdinContext.Consumer>
+        {({ stdin, setRawMode }) => (
+          <TextInput {...this.props} stdin={stdin} setRawMode={setRawMode} />
+        )}
+      </StdinContext.Consumer>
     )
   }
 }

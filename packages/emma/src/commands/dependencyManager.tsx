@@ -1,7 +1,8 @@
 import * as React from 'react'
 import { Package } from 'read-pkg'
-import { Input } from '../components/Input'
 import { Color, Text, Box } from 'ink'
+
+import { Input } from '../components/Input'
 
 interface IDependency {
   name: string
@@ -31,10 +32,6 @@ class DependencyManager extends React.Component<Props, State> {
     dependencies: new Map(),
   }
 
-  constructor(props) {
-    super(props)
-  }
-
   handleInputChange = input => {
     this.setState({
       input,
@@ -47,20 +44,15 @@ class DependencyManager extends React.Component<Props, State> {
 
   render() {
     return (
-      <div>
-        <Box>
-          <Color rgb={[0, 255, 255]}>{`Search packages: `}</Color>
-          <Input
-            value={this.state.input}
-            placeholder="Type to search..."
-            focus={true}
-            onChange={this.handleInputChange}
-            onSubmit={this.handleInputSubmit}
-          />
-        </Box>
-        <div>"Dependency manager"</div>
-        <div>Powered by Algolia.</div>
-      </div>
+      <Box>
+        <Color rgb={[0, 255, 255]}>{`Search packages: `}</Color>
+        <Input
+          value={this.state.input}
+          placeholder="Type to search..."
+          focus={true}
+          onChange={this.handleInputChange}
+        />
+      </Box>
     )
   }
 }

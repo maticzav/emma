@@ -37,7 +37,7 @@ declare module 'ink' {
       | 'space-between'
       | 'space-around'
   }
-  export class Box extends React.Component<BoxProps> {}
+  declare class Box extends React.Component<BoxProps> {}
 
   /**
    * Text
@@ -48,7 +48,7 @@ declare module 'ink' {
     underline?: boolean
     strikethrough?: boolean
   }
-  export class Text extends React.Component<TextProps> {}
+  declare class Text extends React.Component<TextProps> {}
 
   /**
    * Color
@@ -66,14 +66,15 @@ declare module 'ink' {
     bgHwb?: number[]
     bgRgb?: number[]
     bgKeyword?: string
+    dim?: boolean
   }
-  export class Color extends React.Component<ColorProps> {}
+  declare class Color extends React.Component<ColorProps> {}
 
   /**
    * Static
    */
   interface StaticProps {}
-  export class Static extends React.Component<StaticProps> {}
+  declare class Static extends React.Component<StaticProps> {}
 
   /**
    * Context
@@ -83,18 +84,18 @@ declare module 'ink' {
    * StdinContext
    */
   interface StdinContextProps {
-    stdin: ReadableStream
+    stdin: ReadStream
     setRawMode: (isEnable: boolean) => void
   }
-  export interface StdinContext extends React.Context<StdinContextProps> {}
+  declare const StdinContext: React.Context<StdinContextProps>
 
   /**
    * StdoutContext
    */
   interface StdoutContextProps {
-    stdout: WritableStream
+    stdout: WriteStream
   }
-  export interface StdoutContext extends React.Context<StdoutContextProps> {}
+  declare const StdoutContext: React.Context<StdoutContextProps>
 
   /**
    * Render
@@ -107,16 +108,16 @@ declare module 'ink' {
    * @param tree
    * @param options
    */
-  export function render<P>(
+  declare function render<P>(
     tree: ReactElement<P>,
     options?: InkRenderOptions,
   ): () => void
 
-  export interface InkRenderOptions {
-    stdout?: WritableStream
-    stdin?: ReadableStream
+  declare interface InkRenderOptions {
+    stdout?: WriteStream
+    stdin?: ReadStream
     debug?: boolean
   }
 
-  export function renderToString<P>(tree: ReactElement<P>): string
+  declare function renderToString<P>(tree: ReactElement<P>): string
 }
