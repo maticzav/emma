@@ -1,6 +1,5 @@
 declare module 'ink' {
   import { Context, ReactElement } from 'react'
-  import { Stream } from 'stream'
 
   /**
    * Components
@@ -71,11 +70,31 @@ declare module 'ink' {
   export class Color extends React.Component<ColorProps> {}
 
   /**
+   * Static
+   */
+  interface StaticProps {}
+  export class Static extends React.Component<StaticProps> {}
+
+  /**
    * Context
    */
 
-  // export declare function StdinContext
-  // StdoutContext
+  /**
+   * StdinContext
+   */
+  interface StdinContextProps {
+    stdin: ReadableStream
+    setRawMode: (isEnable: boolean) => void
+  }
+  export interface StdinContext extends React.Context<StdinContextProps> {}
+
+  /**
+   * StdoutContext
+   */
+  interface StdoutContextProps {
+    stdout: WritableStream
+  }
+  export interface StdoutContext extends React.Context<StdoutContextProps> {}
 
   /**
    * Render
@@ -83,16 +102,21 @@ declare module 'ink' {
 
   /**
    *
-   * render
+   * render to stdout, stdin
    *
    * @param tree
    * @param options
    */
-  export function render<P>(tree: ReactElement<P>, options?: InkRenderOptions)
+  export function render<P>(
+    tree: ReactElement<P>,
+    options?: InkRenderOptions,
+  ): () => void
 
   export interface InkRenderOptions {
-    stdout?: Stream
-    stdin?: Stream
+    stdout?: WritableStream
+    stdin?: ReadableStream
     debug?: boolean
   }
+
+  export function renderToString<P>(tree: ReactElement<P>): string
 }
