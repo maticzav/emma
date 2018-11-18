@@ -11,4 +11,23 @@ export interface IDependency {
  * Main component definition.
  *
  */
-export class DependencyManager extends Component {}
+
+interface Props {}
+
+interface State {
+  dependencies: IDependency[]
+}
+
+export class DependencyManager extends Component<Props, State> {
+  state: State = {
+    dependencies: [],
+  }
+
+  constructor(props) {
+    super(props)
+  }
+
+  render() {
+    return 'fo'
+  }
+}
