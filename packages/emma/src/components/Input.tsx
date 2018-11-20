@@ -59,13 +59,13 @@ class TextInput extends React.PureComponent<TextInputProps> {
     const { stdin, setRawMode } = this.props
 
     setRawMode(true)
-    stdin.on('keypress', this.handleKeyPress)
+    stdin.on('data', this.handleKeyPress)
   }
 
   componentWillUnmount() {
     const { stdin, setRawMode } = this.props
 
-    stdin.removeListener('keypress', this.handleKeyPress)
+    stdin.removeListener('data', this.handleKeyPress)
     setRawMode(false)
   }
 
@@ -74,30 +74,34 @@ class TextInput extends React.PureComponent<TextInputProps> {
    * Input handler
    *
    */
-  handleKeyPress = (ch, key) => {
-    console.log('pressed')
-    if (!this.props.focus) {
-      return
-    }
+  handleKeyPress = data => {
+    const { value, focus, onChange, onSubmit } = this.props
 
-    if (hasAnsi(key.sequence)) {
-      return
-    }
+    /**
+     * Prevent any action if element not focused.
+     */
+    if (!focus) return
 
-    const { value, onChange, onSubmit } = this.props
+    /**
+     * Decode input character.
+     */
+    const char = String(data)
 
-    if (key.name === 'return') {
-      onSubmit(value)
-      return
-    }
+    switch (char) {
+      case '\r':
+        /** Enter  */
+        onSubmit(value)
+        break
 
-    if (key.name === 'backspace') {
-      onChange(value.slice(0, -1))
-      return
-    }
-
-    if (key.sequence === ch && /^.*$/.test(ch) && !key.ctrl) {
-      onChange(value + ch)
+      case '\x08':
+      case '\x7F':
+        onChange(value.slice(0, -1))
+        break
+      case ' ':
+        break
+      default:
+        onChange(value + char)
+        break
     }
   }
 }
