@@ -15,7 +15,11 @@ interface BoilerplateInstallerProps {
   onComplete: (boilerplate: IBoilerplate) => void
 }
 
-class BoilerplateInstaller extends React.Component<BoilerplateInstallerProps> {}
+class BoilerplateInstaller extends React.Component<BoilerplateInstallerProps> {
+  render() {
+    return <div>"install"</div>
+  }
+}
 
 export function boilerplateInstaller(
   onComplete?: (boilerplate: IBoilerplate) => void,

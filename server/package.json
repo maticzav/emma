@@ -6,13 +6,13 @@
     "test": "dotenv -- jest"
   },
   "dependencies": {
-    "ajv": "^6.5.4",
+    "ajv": "^6.5.5",
     "algoliasearch": "^3.30.0",
-    "apollo-server": "^2.1.0",
-    "emma-json-schema": "file:../packages/emma-json-schema",
+    "apollo-server": "^2.2.2",
+    "emma-json-schema": "file:packages/emma-json-schema",
     "graphql": "^14.0.2",
     "isomorphic-fetch": "^2.2.1",
-    "probot": "^7.3.1"
+    "probot": "^7.4.0"
   },
   "devDependencies": {
     "@types/algoliasearch": "3.30.1",

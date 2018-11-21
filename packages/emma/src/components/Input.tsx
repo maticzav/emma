@@ -15,17 +15,12 @@ import hasAnsi = require('has-ansi')
  *
  */
 
-interface TextInputProps {
-  value: string
-  placeholder?: string
-  focus?: boolean
+interface Props extends InputProps {
   stdin: ReadStream
   setRawMode: (raw: boolean) => void
-  onChange: (input: string) => void
-  onSubmit?: (input: string) => void
 }
 
-class TextInput extends React.PureComponent<TextInputProps> {
+class Input extends React.PureComponent<Props> {
   static propTypes = {
     value: PropTypes.string.isRequired,
     placeholder: PropTypes.string,
@@ -77,6 +72,13 @@ class TextInput extends React.PureComponent<TextInputProps> {
   handleKeyPress = data => {
     const { value, focus, onChange, onSubmit } = this.props
 
+    const ARROW_UP = '\u001B[A'
+    const ARROW_DOWN = '\u001B[B'
+    const ARROW_LEFT = '\u001B[D'
+    const ARROW_RIGHT = '\u001B[C'
+    const TAB = '\t'
+    const CTRL_C = '\x03'
+
     /**
      * Prevent any action if element not focused.
      */
@@ -95,9 +97,16 @@ class TextInput extends React.PureComponent<TextInputProps> {
 
       case '\x08':
       case '\x7F':
+        /** Backspace */
         onChange(value.slice(0, -1))
         break
-      case ' ':
+      case TAB:
+      case ARROW_DOWN:
+      case ARROW_LEFT:
+      case ARROW_RIGHT:
+      case ARROW_UP:
+      case CTRL_C:
+        /** Ignored */
         break
       default:
         onChange(value + char)
@@ -105,6 +114,12 @@ class TextInput extends React.PureComponent<TextInputProps> {
     }
   }
 }
+
+/**
+ *
+ * Input
+ *
+ */
 
 interface InputProps {
   value: string
@@ -114,12 +129,12 @@ interface InputProps {
   onSubmit?: (input: string) => void
 }
 
-export class Input extends React.PureComponent<InputProps> {
+export default class extends React.PureComponent<InputProps> {
   render() {
     return (
       <StdinContext.Consumer>
         {({ stdin, setRawMode }) => (
-          <TextInput {...this.props} stdin={stdin} setRawMode={setRawMode} />
+          <Input {...this.props} stdin={stdin} setRawMode={setRawMode} />
         )}
       </StdinContext.Consumer>
     )

@@ -3,7 +3,8 @@ import { Box, Color } from 'ink'
 import { Map } from 'immutable'
 import { Package } from 'read-pkg'
 
-import { Input } from '../components/Input'
+import Input from '../components/Input'
+import InfiniteScroll from '../components/InfiniteScroll'
 
 /**
  *
@@ -110,10 +111,25 @@ class DependencyManager extends React.Component<Props, State> {
           />
         </Box>
         <Box>
-          <DependencySearch
+          <InfiniteScroll
+            items={[
+              { n: 1 },
+              { n: 2 },
+              { n: 3 },
+              { n: 4 },
+              { n: 5 },
+              { n: 6 },
+              { n: 7 },
+              { n: 8 },
+              { n: 9 },
+              { n: 1 },
+            ]}
+            render={Item}
+          />
+          {/* <DependencySearch
             input={this.state.input}
             onClick={this.handleDependencyToggle}
-          />
+          /> */}
         </Box>
         <div>Powered by Algolia.</div>
       </div>
@@ -128,6 +144,12 @@ class DependencyManager extends React.Component<Props, State> {
 
   async handleInstall() {
     return
+  }
+}
+
+class Item extends React.Component<{ n: number; focus: boolean }> {
+  render() {
+    return <Color dim={!this.props.focus}>{this.props.n}</Color>
   }
 }
 
