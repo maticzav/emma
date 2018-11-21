@@ -1598,7 +1598,7 @@
   dependencies:
     "@types/node" "*"
 
-"@types/algoliasearch@3.30.1", "@types/algoliasearch@^3.30.1":
+"@types/algoliasearch@3.30.1":
   version "3.30.1"
   resolved "https://registry.yarnpkg.com/@types/algoliasearch/-/algoliasearch-3.30.1.tgz#0cb9b918ba7f94c1e60527ba74273ca276d17137"
   integrity sha512-UKzBzTH2UDXiLSb/Zyf9jqf2y8rScJXeLBz1Jie8VUZv6xhg1lPaqgkEsTtc8Qi7HYLjlnw768v0CEsCxsmLOw==
@@ -1839,7 +1839,7 @@
     "@types/history" "*"
     "@types/react" "*"
 
-"@types/react-instantsearch-core@^5.2.1":
+"@types/react-instantsearch-core@5.2.1":
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/@types/react-instantsearch-core/-/react-instantsearch-core-5.2.1.tgz#b030de0d4ed44bdcbb6a05f3490048f1e2c5e76c"
   integrity sha512-rZUM3n1iTmbobeyYILgANkKphWEL/j4zMo/kMp4qFpAgxBnA6Dp+KUcCy725CMmjvoNrEQS9Por88ieWGWH46g==
@@ -16883,7 +16883,7 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript@3.1.6, typescript@^3.1.6:
+typescript@3.1.6:
   version "3.1.6"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.1.6.tgz#b6543a83cfc8c2befb3f4c8fba6896f5b0c9be68"
   integrity sha512-tDMYfVtvpb96msS1lDX9MEdHrW4yOuZ4Kdc4Him9oU796XldPYF/t2+uKoX0BBa0hXXwDlqYQbXY5Rzjzc5hBA==
