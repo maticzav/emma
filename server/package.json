@@ -9,7 +9,7 @@
     "ajv": "^6.5.5",
     "algoliasearch": "^3.30.0",
     "apollo-server": "^2.2.2",
-    "emma-json-schema": "file:packages/emma-json-schema",
+    "emma-json-schema": "file:../packages/emma-json-schema",
     "graphql": "^14.0.2",
     "isomorphic-fetch": "^2.2.1",
     "probot": "^7.4.0"

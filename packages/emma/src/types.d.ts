@@ -9,6 +9,8 @@ declare module 'ink' {
    * Box
    */
   interface BoxProps {
+    width?: number
+    height?: number
     // Pading
     paddingTop?: number
     paddingBottom?: number

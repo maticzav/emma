@@ -36,7 +36,7 @@ class DependencyManager extends React.Component<Props, State> {
 
     this.state = {
       input: '',
-      dependencies: normalisePackageDependencies(pkg),
+      dependencies: Map(), //normalisePackageDependencies(pkg),
     }
   }
 
@@ -122,9 +122,10 @@ class DependencyManager extends React.Component<Props, State> {
               { n: 7 },
               { n: 8 },
               { n: 9 },
-              { n: 1 },
+              { n: 10 },
             ]}
             render={Item}
+            size={5}
           />
           {/* <DependencySearch
             input={this.state.input}
@@ -149,7 +150,11 @@ class DependencyManager extends React.Component<Props, State> {
 
 class Item extends React.Component<{ n: number; focus: boolean }> {
   render() {
-    return <Color dim={!this.props.focus}>{this.props.n}</Color>
+    return (
+      <Color dim={!this.props.focus}>{`${this.props.n}-${
+        this.props.focus
+      }`}</Color>
+    )
   }
 }
 

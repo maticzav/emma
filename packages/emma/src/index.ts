@@ -71,6 +71,7 @@ async function main(
     process.exit()
   }
 
+  unmount = render(commands.dependencyManager({} as any, onExit))
   /**
    *
    * Get package definition. If there exists package definition

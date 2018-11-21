@@ -1,4 +1,4 @@
-import { Input } from './Input'
+import Input from './Input'
 
 describe('InfiniteSelect component works correctly', () => {
   test('Keypress up moves up.', async () => {

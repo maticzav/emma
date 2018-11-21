@@ -1,6 +1,6 @@
 import * as React from 'react'
 import * as PropTypes from 'prop-types'
-import { StdinContext } from 'ink'
+import { StdinContext, Color } from 'ink'
 import { ReadStream } from 'fs'
 
 /**
@@ -102,31 +102,30 @@ class InfiniteScroll<T = {}> extends React.Component<Props<T>, State> {
     const char = String(data)
 
     switch (char) {
-      case '\u001B[A': {
+      case '\u001B[A':
         /** Arrow UP */
-        if (cursor - 1 >= 0) this.setState({ cursor: cursor - 1 })
-      }
-      case '\u001B[B': {
+        if (cursor - 1 >= 0) return this.setState({ cursor: cursor - 1 })
+        break
+      case '\u001B[B':
         /** Arrow DOWN */
-        if (cursor + 1 <= items.length) this.setState({ cursor: cursor + 1 })
-      }
+        if (cursor + 1 < items.length)
+          return this.setState({ cursor: cursor + 1 })
+        break
     }
   }
 
   componentDidUpdate<T>(props: Props<T>, state: State) {
+    const cursor = this.state.cursor
+
     /**
      * Trigger onWillReachEnd on the second last item in the list.
      */
-    if (state.cursor === props.items.length - 2) {
-      this.props.onWillReachEnd()
-    }
+    if (cursor === this.props.items.length - 2) this.props.onWillReachEnd()
 
     /**
      * Trigger onReachedEnd once it reached it.
      */
-    if (state.cursor === props.items.length) {
-      this.props.onReachedEnd()
-    }
+    if (cursor === this.props.items.length) this.props.onReachedEnd()
   }
 
   /**
@@ -146,17 +145,17 @@ class InfiniteScroll<T = {}> extends React.Component<Props<T>, State> {
      */
     const renderedItems = filterMap(items, (item, i) => {
       /** Remove items which are not in mask */
-      if (!(mask <= i && i <= mask + size)) {
+      if (!(mask <= i && i < mask + size)) {
         return null
       }
 
-      /** Renders active item */
+      /** Render active item */
       if (i === cursor) {
-        return <RenderItem key={i} {...item} active={true} />
+        return <RenderItem key={i} {...item} focus={true} />
       }
 
-      /** Renders normal items */
-      return <RenderItem key={i} {...item} active={false} />
+      /** Render normal items */
+      return <RenderItem key={i} {...item} focus={false} />
     })
 
     return <div>{renderedItems}</div>
@@ -193,11 +192,11 @@ class InfiniteScroll<T = {}> extends React.Component<Props<T>, State> {
       /** Items are shorter than mask. */
       if (items.length <= size) return 0
 
-      /** Cursor has moved past the middle point of the mask. */
-      if (cursor + offset >= items.length) return items.length - size
-
       /** Cursor has moved above the middle point of the mask. */
       if (cursor - offset <= 0) return 0
+
+      /** Cursor has moved past the middle point of the mask. */
+      if (cursor + offset >= items.length) return items.length - size
 
       /** Cursor is in the "middle" of the list. */
       return cursor - offset
