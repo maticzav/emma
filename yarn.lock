@@ -1639,9 +1639,9 @@
     "@types/history" "*"
     "@types/react" "*"
 
-"@types/react-instantsearch-core@5.2.2":
-  version "5.2.2"
-  resolved "https://registry.yarnpkg.com/@types/react-instantsearch-core/-/react-instantsearch-core-5.2.2.tgz#1f7e2a498339499329c8575b279e9d7f12252317"
+"@types/react-instantsearch-core@5.2.3":
+  version "5.2.3"
+  resolved "https://registry.yarnpkg.com/@types/react-instantsearch-core/-/react-instantsearch-core-5.2.3.tgz#9642d15cae7749bd91a0952e59a25ecd357846c7"
   dependencies:
     "@types/react" "*"
 
