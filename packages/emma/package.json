@@ -33,7 +33,7 @@
     "@types/jest": "23.3.10",
     "@types/meow": "5.0.0",
     "@types/node": "10.12.12",
-    "@types/prop-types": "15.5.7",
+    "@types/prop-types": "15.5.8",
     "@types/react": "16.7.13",
     "@types/react-instantsearch-core": "5.2.3",
     "@types/read-pkg": "3.0.0",
