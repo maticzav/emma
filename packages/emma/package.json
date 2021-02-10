@@ -29,7 +29,7 @@
     "read-pkg": "^4.0.1"
   },
   "devDependencies": {
-    "@types/algoliasearch": "3.30.1",
+    "@types/algoliasearch": "3.34.11",
     "@types/jest": "23.3.14",
     "@types/meow": "5.0.0",
     "@types/node": "10.17.50",
