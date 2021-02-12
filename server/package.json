@@ -17,7 +17,7 @@
   "devDependencies": {
     "@types/algoliasearch": "3.34.11",
     "@types/graphql": "14.2.3",
-    "@types/isomorphic-fetch": "0.0.34",
+    "@types/isomorphic-fetch": "0.0.35",
     "@types/jest": "23.3.14",
     "@types/node": "10.17.50",
     "dotenv-cli": "1.4.0",
