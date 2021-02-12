@@ -10767,10 +10767,10 @@
   "resolved" "https://registry.npmjs.org/prettier/-/prettier-2.2.1.tgz"
   "version" "2.2.1"
 
-"prettier@1.16.0":
-  "integrity" "sha512-MCBCYeAuZfejUPdEpkleLWvpRBwLii/Sp5jQs0eb8Ul/drGIDjkL6tAU24tk6yCGf0KPV5rhPPPlczfBmN2pWQ=="
-  "resolved" "https://registry.npmjs.org/prettier/-/prettier-1.16.0.tgz"
-  "version" "1.16.0"
+"prettier@1.19.1":
+  "integrity" "sha512-s7PoyDv/II1ObgQunCbB9PdLmUcBZcnWOcxDh7O0N/UwDEsHyqkW+Qh28jW+mVuCdx7gLB0BotYI1Y6uI9iyew=="
+  "resolved" "https://registry.npmjs.org/prettier/-/prettier-1.19.1.tgz"
+  "version" "1.19.1"
 
 "pretty-bytes@^4.0.2":
   "integrity" "sha1-sr+C5zUNZcbDOqlaqlpPYyf2HNk="
