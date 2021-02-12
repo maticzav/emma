@@ -3032,7 +3032,14 @@
   dependencies:
     "@types/node" "*"
 
-"@types/algoliasearch@3.34.11":
+"@types/algoliasearch-helper@*":
+  version "2.26.1"
+  resolved "https://registry.yarnpkg.com/@types/algoliasearch-helper/-/algoliasearch-helper-2.26.1.tgz#60cf377e7cb4bd9a55f7eba35182792763230a24"
+  integrity sha512-JN1wq/yLxxBcc6MeSe57F9Aqv8wL964L0nBOUTSQ5OECzWxaECuGYV06VnGKn/c+9AGB97RAgqx2PUbYflZNqA==
+  dependencies:
+    "@types/algoliasearch" "*"
+
+"@types/algoliasearch@*", "@types/algoliasearch@3.34.11":
   version "3.34.11"
   resolved "https://registry.yarnpkg.com/@types/algoliasearch/-/algoliasearch-3.34.11.tgz#a7f3b89a95578be3acd972167bdbadb5dcf71660"
   integrity sha512-FFMbpmXCHcgbypnOUY98SDEoiLc2bXO51gxgX02ypb8srZZnZCPV/8VKknuEtgr1VkgYLrqLi5BoYzZRVni6Fw==
@@ -3411,11 +3418,12 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-instantsearch-core@5.2.3":
-  version "5.2.3"
-  resolved "https://registry.yarnpkg.com/@types/react-instantsearch-core/-/react-instantsearch-core-5.2.3.tgz#9642d15cae7749bd91a0952e59a25ecd357846c7"
-  integrity sha512-ujEGrMCrLuB4MOG8GJ/Gp0TxdJi2YaNiE8UC65+Cae0oGo+4B0sa42SAJnDO4VpRnh84OxfvrsZkgbUH9wXYlg==
+"@types/react-instantsearch-core@5.2.9":
+  version "5.2.9"
+  resolved "https://registry.yarnpkg.com/@types/react-instantsearch-core/-/react-instantsearch-core-5.2.9.tgz#c8050dedefcb86ff01a0ff584c1801f5b165fe4a"
+  integrity sha512-tem7Vc8R1SZlt5hxW/xAJT3jUbfwBEg6ZYf9lWr8DtccFRZkzbC8dVhV9os3Fq73hqYXWImB/sS3/wfRqwdW2g==
   dependencies:
+    "@types/algoliasearch-helper" "*"
     "@types/react" "*"
 
 "@types/react@*":
