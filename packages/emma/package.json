@@ -34,7 +34,7 @@
     "@types/meow": "5.0.0",
     "@types/node": "10.17.51",
     "@types/prop-types": "15.7.3",
-    "@types/react": "16.7.20",
+    "@types/react": "16.14.3",
     "@types/react-instantsearch-core": "5.2.3",
     "@types/read-pkg": "3.0.0",
     "@types/update-notifier": "2.5.0",
