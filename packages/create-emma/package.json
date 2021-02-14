@@ -21,7 +21,7 @@
     "chalk": "^2.4.1",
     "execa": "^1.0.0",
     "inquirer": "^6.2.0",
-    "meow": "^5.0.0",
+    "meow": "^9.0.0",
     "ora": "^3.0.0",
     "parse-github-url": "^1.0.2",
     "request": "^2.88.0",
