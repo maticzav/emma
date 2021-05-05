@@ -19,7 +19,7 @@
   },
   "main": "dist/index.js",
   "dependencies": {
-    "algoliasearch": "^3.30.0",
+    "algoliasearch": "^4.0.0",
     "immutable": "^4.0.0-rc.12",
     "ink": "^2.0.0-9",
     "meow": "^5.0.0",
