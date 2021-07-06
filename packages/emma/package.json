@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "@types/algoliasearch": "3.34.11",
-    "@types/jest": "23.3.14",
+    "@types/jest": "26.0.24",
     "@types/meow": "5.0.0",
     "@types/node": "10.17.60",
     "@types/prop-types": "15.7.3",
