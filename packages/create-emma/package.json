@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "@types/execa": "0.9.0",
-    "@types/inquirer": "0.0.44",
+    "@types/inquirer": "7.3.3",
     "@types/meow": "5.0.0",
     "@types/node": "10.17.60",
     "@types/ora": "1.3.5",
