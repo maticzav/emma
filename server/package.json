@@ -22,7 +22,7 @@
     "@types/node": "10.17.60",
     "dotenv-cli": "1.4.0",
     "jest": "23.6.0",
-    "nodemon": "1.19.4",
+    "nodemon": "2.0.12",
     "prisma": "1.34.12",
     "ts-jest": "23.10.5",
     "ts-node": "7.0.1",
